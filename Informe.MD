@@ -1,3 +1,4 @@
+```
 #include <Arduino.h>
 
 const int potPin = 15; //Pin al que conectaremos el voltaje
@@ -11,6 +12,7 @@ void setup() {
 }
 
 void loop() {
+  
   potValue=analogRead(potPin); //Lectura del valor analógico del punto 15 (Voltaje)
   Serial.println(potValue); //Escritura del valor obtenido antes
   
@@ -21,3 +23,5 @@ void loop() {
   digitalWrite(23,LOW); //Asignamos un valor bajo de voltaje (apagado) al pin 23 (LED)
   delay(2000); //Esperamos 2s
 }
+
+```
