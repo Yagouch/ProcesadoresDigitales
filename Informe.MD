@@ -48,13 +48,11 @@ flowchart TD
     I --> J[Delay de 2s '2000ms']
     J --> C
 </div>
-Hecho con mermaid.
 
 ### Diagrama de tiempos ###
 **Nota:** Como no sé cuantos ciclos de reloj hay en un segundo, intuimos que pasan más ciclos de los que visualmente se ven. (ipp=Imprimir por pantalla)
 ```wavedrom
 { signal : [
-  { name: "clk",  wave: "p............." },
   { name: "actions",  wave: "45537..537....",   data: "1 2 3 4 delay:1s 5 6 delay:2s" },
   {name: "led", wave: "0...1....0...."},
   {name: "ipp", wave: "01.0...10....."},
