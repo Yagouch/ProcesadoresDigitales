@@ -1,4 +1,4 @@
-# Practicia 2A #
+# Practica 2A #
 ```
 #include <Arduino.h>
 
