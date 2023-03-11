@@ -1,4 +1,46 @@
-# Practicia 2A #
+# Informe - Practica 2 #
+***
+En esta práctica vamos a trabajar con interrupciones (ISH) las cuales, como su nombre indica son interrupciones de la actividad normal del procesador, para ejecutar otra actividad (y posteriormente reanudar la actividad normal).
+
+Para ello vamos a usar dos tipos de eventos los cuales ejecutarán una función (ISR). Estos eventos son:
+* Evento hardware (Boton).
+* Evento programado (Timer).
+
+
+## Interrupcion por hardware - Parte A ##
+***
+Lo primero que debemos hacer es declarar el evento por hardware que deseemos implementar, en este caso un botón.
+Declaramos una estructura que almacene el pin que vamos a asignar a la interrupción, una variable que almacene el número de veces que activamos el boton, y una variable booleana que indique si el botón esta activado.
+
+```
+struct Button {
+const uint8_t PIN;
+uint32_t numberKeyPresses;
+bool pressed;
+};
+```
+Para las dos primeras variables usaremos los tipos definidos uintX_t, el cual será un int sin signo de X bits.
+
+Para continuar usamos la estructura creada para definir el pin GPIO 18 como la entrada para nuestro botón.
+```
+Button button1 = {18, 0, false};
+```
+Despues declaramos la función que se ejecutará cuando la interrupción se lleve a cabo, la cual, simplemente, sumará uno a las veces que hemos pulsado el botón, y pondra el booleano a 1.
+```
+void IRAM_ATTR isr() {
+button1.numberKeyPresses += 1;
+button1.pressed = true;
+}
+```
+En el ```void setup()``` aparte de declarar la comunicación serie con ```Serial.begin()```, vamos a declarar el pin que hemos usado para la interrupción por botón como un ```INPUT_PULLUP``` el cual es como un INPUT normal pero con una resistencia en *pullup*, para conseguir que mientras no se pulse el botón, la salida de un nivel alto de tensión continuo y no haya rebotes ocasionados por el comportamiento normal del botón.
+
+Además incluiremos lo mas importante para esta práctica, el ```attachInterrupt(button1.PIN, isr, FALLING);```, que es el encargado de vinvular el pin con la funcion, y lo pondremos en modo *FALLING* para que cuando el boton se pulse (pasa de HIGH a LOW) se ejecute la interrupcion.
+
+En el ```void loop()``` escribimos un *if* para que cuando la interrupcion se acabe el *if* se active y retorne el booleano a false e imprima por pantalla el número de veces que se ha activado el boton, además habrá otro *if* que se encargá de que cuando pase 1 minuto (60000 ms), ejecute el ```detachInterrupt(button1.PIN);``` e imprima 'Interrupt Detached!' para que haga una separación de interrupciones cuando ya no se quiera que el ESP32 monitorice el pin.
+
+
+### Codigo ###
+***
 ```
 #include <Arduino.h>
 
@@ -42,38 +84,25 @@ if (millis() - lastMillis > 60000) {
 
 }
 ```
-### Impresion serie ###
+### Salida del código ###
+***
 ```
-Button 1 has been pressed 8465 times
-Button 1 has been pressed 8466 times
-Button 1 has been pressed 8482 times
-Button 1 has been pressed 8484 times
-Button 1 has been pressed 8490 times
-Button 1 has been pressed 8497 times
-Button 1 has been pressed 8582 times
-Button 1 has been pressed 8583 times
-Button 1 has been pressed 8584 times
-Button 1 has been pressed 8586 times
-Button 1 has been pressed 8589 times
-Button 1 has been pressed 8663 times
-Button 1 has been pressed 8664 times
-Button 1 has been pressed 8665 times
-Button 1 has been pressed 8668 times
-Button 1 has been pressed 8674 times
-Button 1 has been pressed 8691 times
-Button 1 has been pressed 8692 times
-Button 1 has been pressed 8695 times
-Button 1 has been pressed 8698 times
+[...]
 Button 1 has been pressed 8701 times
 Button 1 has been pressed 8710 times
 Button 1 has been pressed 8713 times
 Button 1 has been pressed 8715 times
 Button 1 has been pressed 8716 times
 Interrupt Detached!
-Interrupt Detached!
 ```
 
-# Practica 2B #
+## Interrupcion por Timer - Parte B ##
+***
+
+
+
+### Codigo ###
+***
 ```
 #include <Arduino.h>
 
@@ -114,19 +143,13 @@ void loop() {
 }
 ```
 
-### Impresion serie ###
+### Salida del código ###
+***
 ```
 An interrupt as occurred. Total number: 1
 An interrupt as occurred. Total number: 2
 An interrupt as occurred. Total number: 3
 An interrupt as occurred. Total number: 4
 An interrupt as occurred. Total number: 5
-An interrupt as occurred. Total number: 6
-An interrupt as occurred. Total number: 7
-An interrupt as occurred. Total number: 8
-An interrupt as occurred. Total number: 9
-An interrupt as occurred. Total number: 10
-An interrupt as occurred. Total number: 11
-An interrupt as occurred. Total number: 12
-An interrupt as occurred. Total number: 13
+[...]
 ```
