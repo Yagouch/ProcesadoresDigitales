@@ -39,7 +39,7 @@ Además incluiremos lo mas importante para esta práctica, el ```attachInterrupt
 En el ```void loop()``` escribimos un *if* para que cuando la interrupcion se acabe el *if* se active y retorne el booleano a false e imprima por pantalla el número de veces que se ha activado el boton, además habrá otro *if* que se encargá de que cuando pase 1 minuto (60000 ms), ejecute el ```detachInterrupt(button1.PIN);``` e imprima 'Interrupt Detached!' para que haga una separación de interrupciones cuando ya no se quiera que el ESP32 monitorice el pin.
 
 
-### Codigo ###
+### Código A ###
 ***
 ```
 #include <Arduino.h>
@@ -84,7 +84,7 @@ if (millis() - lastMillis > 60000) {
 
 }
 ```
-### Salida del código ###
+### Salida del código A ###
 ***
 ```
 [...]
@@ -96,13 +96,34 @@ Button 1 has been pressed 8716 times
 Interrupt Detached!
 ```
 
+### Diagrama de flujo A ###
+***
+```mermaid
+flowchart TD
+    A(Inicio) --> B[Declaración de button1]
+    B --> C[ISR definida]
+    C --> D[Setup]
+    D --> E[Loop]
+    E --> F{button1.pressed}
+    F --> |Si| G[Serial.printf]
+    G --> H[button1.pressed=false]
+    H --> E
+    F --> |No| E
+    K(Pulsar boton) --> L[button1.pressed=true]
+    L --> E
+    E --> Q[/*Pasa 1 minuto*/]
+    Q --> R[detachInterrupt]
+    R --> S[Serial.println]
+    S --> S
+```
+
 ## Interrupcion por Timer - Parte B ##
 ***
 La variable de contador de interrupciones ```volatile int interruptCounter;``` debe ser declarada como **volatile** para que no sea eliminada debido a las optimizaciones del compilador, ya que se compartirá entre el loop principal y el ISR.
 
 Para configurar el timer, necesitaremos un puntero a una variable de tipo ```hw_timer_t```, que luego usaremos en el ```void setup()```.
 
-Aun dentro de la declaración de las variables globales, declaramos el ```portMUX_TYPE timerMux``` que nos servirá de dirección para poder manipular la variable ```interruptCounter``` dentro de una sección crítica (*critical section*) dado`que va a ser usada por la fuincion del *ISR* y por el *void loop*.
+Aun dentro de la declaración de las variables globales, declaramos el ```portMUX_TYPE timerMux``` que nos servirá de dirección para poder manipular la variable ```interruptCounter``` dentro de una sección crítica (*critical section*) dado que va a ser usada por la fuincion del *ISR* y por el *void loop*.
 
 Posteriormente creamos la función que se ejecutará cuando la interrupción se lleve a cabo, con el atributo ```IRAM_ATTR``` para que la función se cargue en la RAM en vez de en memoria *flash* para que esta función se pueda ejecutar más rápido y la interrupción se lleve a cabo en menos tiempo.
 
@@ -119,7 +140,7 @@ Para acabar con el ```void setup()``` habilitaremos la alarma creada con todas e
 Finalmente dentro del ```void loop()``` usaremos *polling* en vez de semáforos para ver el valor del contador, si este contador es mayor que 0, hará que se ejecute primero en una sección crítica el drecremento del contador dando a entender así que se ha recibido la interrupción y nos hemos hecho cargo de ella, además de simplemente el contador global de interrupciones y la impresión por pantalla de este contador.
 
 
-### Codigo ###
+### Codigo B ###
 ***
 ```
 #include <Arduino.h>
@@ -161,7 +182,7 @@ void loop() {
 }
 ```
 
-### Salida del código ###
+### Salida del código B ###
 ***
 ```
 An interrupt as occurred. Total number: 1
@@ -171,3 +192,19 @@ An interrupt as occurred. Total number: 4
 An interrupt as occurred. Total number: 5
 [...]
 ```
+### Diagrama de flujo B ###
+***
+```mermaid
+flowchart TD
+    A(Inicio) --> B[Variables Globales]
+    B --> C[ISR definida]
+    C --> D[Setup]
+    D --> E[Loop]
+    E --> F{interruptCounter>0}
+    F --> |Si| E
+    F --> |No| G[interruptCounter-- , totalInterruptCounter++ , Serial.print ]
+    G --> E
+    K(ISH) --> L[interruptCounter++]
+    L --> E
+```
+ 
