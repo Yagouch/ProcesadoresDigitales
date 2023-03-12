@@ -5,14 +5,14 @@
 #include <Arduino.h>
 
 const int potPin = 15; //Pin al que conectaremos el voltaje
-int potValue = 0; //Variable donde se almacenará los valores de voltaje
-float measurement = 0; //Variable donde se almacenará los valores de temperatura
+int potValue = 0; //Variable donde se almacenaran los valores de voltaje
+float measurement = 0; //Variable donde se almacenaran los valores de temperatura
 
 void setup() {
 
   Serial.begin(115200);
 
-  pinMode(23, OUTPUT); //Declarar el pin 23 como salida (LED)
+  pinMode(23, OUTPUT); //Declararamos el pin 23 como salida (LED)
 
 }
 
@@ -50,7 +50,7 @@ flowchart TD
 </div>
 
 ### Diagrama de tiempos ###
-**Nota:** Como no sé cuantos ciclos de reloj hay en un segundo, intuimos que pasan más ciclos de los que visualmente se ven. (ipp=Imprimir por pantalla)
+**Nota:** Como no sabemos cuantos ciclos de reloj hay en un segundo, intuimos que pasan más ciclos de los que visualmente se ven. (ipp=Imprimir por pantalla)
 ```wavedrom
 { signal : [
   { name: "actions",  wave: "45537..537....",   data: "1 2 3 4 delay:1s 5 6 delay:2s" },
