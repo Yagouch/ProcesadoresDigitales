@@ -10,7 +10,7 @@ Para ello vamos a usar dos tipos de eventos los cuales ejecutarán una función 
 ## Interrupcion por hardware - Parte A ##
 ***
 Lo primero que debemos hacer es declarar el evento por hardware que deseemos implementar, en este caso un botón.
-Declaramos una estructura que almacene el pin que vamos a asignar a la interrupción, una variable que almacene el número de veces que activamos el boton, y una variable booleana que indique si el botón esta activado.
+Declaramos una estructura que almacene el pin que vamos a asignar a la interrupción, una variable que almacene el número de veces que activamos el botón, y una variable booleana que indique si el botón está activado.
 
 ```
 struct Button {
@@ -34,7 +34,7 @@ button1.pressed = true;
 ```
 En el ```void setup()``` aparte de declarar la comunicación serie con ```Serial.begin()```, vamos a declarar el pin que hemos usado para la interrupción por botón como un ```INPUT_PULLUP``` el cual es como un INPUT normal pero con una resistencia en *pullup*, para conseguir que mientras no se pulse el botón, la salida de un nivel alto de tensión continuo y no haya rebotes ocasionados por el comportamiento normal del botón.
 
-Además incluiremos lo mas importante para esta práctica, el ```attachInterrupt(button1.PIN, isr, FALLING);```, que es el encargado de vinvular el pin con la funcion, y lo pondremos en modo *FALLING* para que cuando el boton se pulse (pasa de HIGH a LOW) se ejecute la interrupcion.
+Además incluiremos lo mas importante para esta práctica, el ```attachInterrupt(button1.PIN, isr, FALLING);```, que es el encargado de vincular el pin con la funcion, y lo pondremos en modo *FALLING* para que cuando el boton se pulse (pasa de HIGH a LOW) se ejecute la interrupcion.
 
 En el ```void loop()``` escribimos un *if* para que cuando la interrupcion se acabe el *if* se active y retorne el booleano a false e imprima por pantalla el número de veces que se ha activado el boton, además habrá otro *if* que se encargá de que cuando pase 1 minuto (60000 ms), ejecute el ```detachInterrupt(button1.PIN);``` e imprima 'Interrupt Detached!' para que haga una separación de interrupciones cuando ya no se quiera que el ESP32 monitorice el pin.
 
@@ -123,7 +123,7 @@ La variable de contador de interrupciones ```volatile int interruptCounter;``` d
 
 Para configurar el timer, necesitaremos un puntero a una variable de tipo ```hw_timer_t```, que luego usaremos en el ```void setup()```.
 
-Aun dentro de la declaración de las variables globales, declaramos el ```portMUX_TYPE timerMux``` que nos servirá de dirección para poder manipular la variable ```interruptCounter``` dentro de una sección crítica (*critical section*) dado que va a ser usada por la fuincion del *ISR* y por el *void loop*.
+Aun dentro de la declaración de las variables globales, declaramos el ```portMUX_TYPE timerMux``` que nos servirá de dirección para poder manipular la variable ```interruptCounter``` dentro de una sección crítica (*critical section*) dado que va a ser usada por la funcion del *ISR* y por el *void loop*.
 
 Posteriormente creamos la función que se ejecutará cuando la interrupción se lleve a cabo, con el atributo ```IRAM_ATTR``` para que la función se cargue en la RAM en vez de en memoria *flash* para que esta función se pueda ejecutar más rápido y la interrupción se lleve a cabo en menos tiempo.
 
