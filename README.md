@@ -8,7 +8,7 @@ Después con el bluetooth crearemos una conexión entre un móvil android y nues
 ***
 ## Web Server - STA
 
-Para establecer un *Web server* en modo STA deberemos conectar el **ESP32** a nuestro wifi, para ello usaremos las variables SSID y password para concectarnos. Después utilizaremos el puerto 80 para establecer la comunicación ya que está destinado a http. Usaremos el comando ```WiFi.begin(ssid, password);```para iniciar la conexión wifi con los datos ingresados anteriormente, y ```WiFi.localIP();```para obtener la IP donde se ubicará nuestra página de manera local.
+El modo STA o *station* significa que nuestro **ESP32** se conectará a la red WiFi indicada para crear una comunicación http por el puerto indicado y en la IP que nos muestra, para establecer un *Web server* en modo STA deberemos conectar el **ESP32** a nuestro wifi, para ello usaremos las variables SSID y password para concectarnos. Después utilizaremos el puerto 80 para establecer la comunicación ya que está destinado a http. Usaremos el comando ```WiFi.begin(ssid, password);```para iniciar la conexión wifi con los datos ingresados anteriormente, y ```WiFi.localIP();```para obtener la IP donde se ubicará nuestra página de manera local.
 
 ### Codigo Wifi-STA
 ***
@@ -22,8 +22,8 @@ void handle_root();
 
 
 // SSID & Password
-const char* ssid = "eel-lab029-02 9193";  // Enter your SSID here
-const char* password = "Q75a(442";  //Enter your Password here
+const char* ssid = "MOVISTAR_D84E";  // Enter your SSID here
+const char* password = "La_contraseña_:-)";  //Enter your Password here
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -171,27 +171,98 @@ void loop(){
 ```
 ***
 ### Salida del cógido Wifi-STA
-
+```
+Connecting to MOVISTAR_D84E
+...
+WiFi connected.
+IP address: 
+192.168.1.61
+```
+***
+### Resultado Wifi-STA
+![Pagina web](images/SS_STA_web.png)
 ***
 ### Diagrama de flujo Wifi-STA
 
 ***
-## Web Server - PA
-
+## Web Server - AP
+El modo AP o *Access Point* del *Web Server* del **ESP32** significa que el microprocesador creará su propia red WiFi donde los dispositivos que quieran establecer una comunicación con este se deberán conectar poniendo el nombre (SSID) y la contraseña que hayamos configurado.
 ***
-### Código Wifi-PA
+### Código Wifi-AP
+```cpp
+#include <Arduino.h>
+#include<WebServer.h>
+#include<WiFi.h>
+
+extern String HTML;
+
+// SSID & Password
+const char* ssid = "ESP32-PA";
+const char* password = "12345678";
+
+WebServer server(80);
+ // Object of WebServer(HTTP port, 80 is defult)
+
+void handle_root();
+
+void setup() {
+Serial.begin(115200);
+Serial.println("Setting Access Point...");
+
+// Generate a wifi access point
+WiFi.softAP(ssid, password);
+
+IPAddress IP = WiFi.softAPIP();
+Serial.println("");
+Serial.println("WiFi established successfully");
+Serial.print("IP: ");
+Serial.println(IP); //Show ESP32 IP on serial
+server.on("/", handle_root);
+server.begin();
+Serial.println("HTTP server started");
+delay(100);
+}
+
+void loop() {
+server.handleClient();
+}
+
+// Handle root url (/)
+void handle_root() {
+server.send(200, "text/html", HTML);
+}
 ```
-
+### Codigo HTML
+```html
+String HTML = 
+"<!DOCTYPE html> "
+"<html> "
+"<body> "
+"<h1> Mi primera Pagina Web </h1> "
+"<p> Pagina creada para probar el modo AP (Access Point) del micropocesador ESP32 </p>"
+"</body> "
+"</html>";
 ```
 ***
-### Salida del cógido Wifi-STA
+### Salida del cógido Wifi-AP
+```
+Setting Access Point...
 
+WiFi established successfully
+IP: 192.168.4.1
+HTTP server started
+```
 ***
-### Diagrama de flujo Wifi-STA
+### Resultado Wifi-AP
+![Pagina web](images/SS_PA_web.png)
+***
+### Diagrama de flujo Wifi-AP
+
+
 
 ***
 ## Bluetooth - Classic
-
+Estableceremos una comunicación serie entre el microprocesador y un móvil donde hemos instalar una aplicación.
 
 ***
 ### Código Bluetooth-Classic
@@ -213,17 +284,20 @@ void setup() {
 }
 
 void loop() { //Aqui mandamos y recibimos información
-  if (Serial.available()) { //Si hay bytes recibidos
-    SerialBT.write(Serial.read()); //Enviamos esos datos via bluetooth al dispositivo conectado
+  if (Serial.available()) { //Si hay bytes recibidos al móvil
+    SerialBT.write(Serial.read()); //Escribimos esos datos via bluetooth al móvil
   }
-  if (SerialBT.available()) {
-    Serial.write(SerialBT.read());
+  if (SerialBT.available()) { //Si hay bytes recibidos en el ESP32
+    Serial.write(SerialBT.read()); //Los enviamos para ser impresos por pantalla
   }
   delay(20);
 }
 ```
 ***
 ### Salida del cógido Bluetooth-Classic
+![Terminal-BT](images/SS_Terminal_BT_classic.png)
+
+<img src="images/SS_movil_BT_classic.jpg" wifth="400" height="800">
 
 ***
 ### Diagrama de flujo Bluetooth-Classic
@@ -233,4 +307,7 @@ void loop() { //Aqui mandamos y recibimos información
 
 
 ***
-### Código Bluetooth-BLE
+### Salida del cógido Bluetooth-BLE
+
+***
+### Diagrama de flujo Bluetooth-BLE
