@@ -1,25 +1,43 @@
 #include <Arduino.h>
-#include "BluetoothSerial.h"
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
 
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
-#endif
-// Las tres línea anteriores comprueban que el Bluetooth esté correctamente habilitado.
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define PIN 26
 
-BluetoothSerial SerialBT;
+BLEServer *pServer;
+BLEService *pService;
+BLECharacteristic *pCharacteristic;
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("ESP32test"); //Inicializamos Bluetooth con un nombre de dispositivo
-  Serial.println("The device started, now you can pair it with bluetooth!");
+  Serial.println("Starting BLE work!");
+
+  BLEDevice::init("ESP32");
+  pServer = BLEDevice::createServer();
+  pService = pServer->createService(SERVICE_UUID);
+  pCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+
+  pCharacteristic->setValue("Yago con BLE :)");
+  pService->start();
+  
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
+  pAdvertising->setMinPreferred(0x12);
+  BLEDevice::startAdvertising();
+  Serial.println("Characteristic defined! Now you can read it in your phone!");
 }
 
-void loop() { //Aqui mandamos y recibimos información
-  if (Serial.available()) { //Si hay bytes recibidos al móvil
-    SerialBT.write(Serial.read()); //Escribimos esos datos via bluetooth al móvil
-  }
-  if (SerialBT.available()) { //Si hay bytes recibidos en el ESP32
-    Serial.write(SerialBT.read()); //Los enviamos para ser impresos por pantalla
-  }
-  delay(20);
+void loop() {
+    for (int i=0; i<pCharacteristic->getLength() ; i++)
+    Serial.println(pCharacteristic->getData()[i],HEX);
+
+    Serial.println("-------");
+
+
+  delay(4000);
 }
