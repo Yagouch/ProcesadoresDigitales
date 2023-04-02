@@ -1,0 +1,133 @@
+#include <Arduino.h>
+// #include <Wire.h>
+ 
+// void setup() {
+//   Wire.begin();
+//   Serial.begin(115200);
+//   Serial.println("\nI2C Scanner");
+// }
+ 
+// void loop() {
+//   byte error, address;
+//   int nDevices;
+//   Serial.println("Scanning...");
+//   nDevices = 0;
+//   for(address = 1; address < 127; address++ ) {
+//     Wire.beginTransmission(address);
+//     error = Wire.endTransmission();
+//     if (error == 0) {
+//       Serial.print("I2C device found at address 0x");
+//       if (address<16) {
+//         Serial.print("0");
+//       }
+//       Serial.println(address,HEX);
+//       nDevices++;
+//     }
+//     else if (error==4) {
+//       Serial.print("Unknow error at address 0x");
+//       if (address<16) {
+//         Serial.print("0");
+//       }
+//       Serial.println(address,HEX);
+//     }    
+//   }
+//   if (nDevices == 0) {
+//     Serial.println("No I2C devices found\n");
+//   }
+//   else {
+//     Serial.println("done\n");
+//   }
+//   delay(5000);          
+// }
+
+#pragma GCC optimize ("O3")   //code optimisation controls - "O2" & "O3" code performance, "Os" code size
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <AHT10.h>
+
+#define COLUMS           20   //LCD columns
+#define ROWS             4    //LCD rows
+#define LCD_SPACE_SYMBOL 0x20 //space symbol from LCD ROM, see p.9 of GDM2004D datasheet
+
+LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
+
+//
+uint8_t readStatus = 0;
+
+AHT10 myAHT10(AHT10_ADDRESS_0X38);
+//
+
+void setup()
+{
+  Serial.begin(115200);
+  //
+  while (myAHT10.begin() != true)
+  {
+    Serial.println(F("AHT10 not connected or fail to load calibration coefficient")); //(F()) save string to flash & keeps dynamic memory free
+    delay(5000);
+  }
+  Serial.println(F("AHT10 OK"));
+  //
+  while (lcd.begin(COLUMS, ROWS, LCD_5x8DOTS) != 1) //colums, rows, characters size
+  {
+    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal."));
+    delay(5000);   
+  }
+
+  lcd.print(F("PCF8574 is OK..."));    //(F()) saves string to flash & keeps dynamic memory free
+  delay(2000);
+
+  lcd.clear();
+
+
+
+  /* 
+  lcd.setCursor(0,0);
+  lcd.print(F("Yago y Ramon 23/3/23"));
+  lcd.setCursor(0, 1);                 //set 1-st colum & 2-nd row
+  lcd.print(F("Hello world!"));
+
+  lcd.setCursor(0, 2);
+  lcd.print(F("Random number:"));
+  lcd.setCursor(0,3);
+  lcd.print(F("Practica 5 I2C"));
+  prints static text */
+
+}
+
+
+void loop()
+{
+  /*
+  lcd.setCursor(14, 2);        //set 15-th colum & 3-rd row
+
+  lcd.print(random(10, 1000));
+  lcd.write(LCD_SPACE_SYMBOL); //"write()" is faster than "lcd.print()"
+  */
+
+  lcd.setCursor(0, 0); 
+  lcd.print(F("Temperature: ")); 
+  lcd.setCursor(0, 1);
+  lcd.print(myAHT10.readTemperature()); lcd.print(F(" +-0.3C")); //by default "AHT10_FORCE_READ_DATA"
+  lcd.setCursor(0, 2);
+  lcd.print(F("Humidity...: "));
+  lcd.setCursor(0, 3);
+  lcd.print(myAHT10.readHumidity());    lcd.print(F(" +-2%"));   //by default "AHT10_FORCE_READ_DATA"
+  
+  lcd.setCursor(13, 0);
+  lcd.print("|");
+  lcd.setCursor(13, 1);
+  lcd.print("|");
+  lcd.setCursor(13, 2);
+  lcd.print("|");
+  lcd.setCursor(13, 3);
+  lcd.print("|");
+
+  lcd.setCursor(15, 1);
+  lcd.print("Ramon");
+  lcd.setCursor(15, 2);
+  lcd.print("Yago");
+
+  delay(1000);
+}
