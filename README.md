@@ -23,16 +23,7 @@ Finalmente, en el ```void loop()``` imprimiremos por pantalla algo para que se v
 ```cpp
 #include <Arduino.h>
 
-void anotherTask( void * parameter )
-{
-  for(;;){
-
-  Serial.println("this is another Task");
-  delay(1000);
-
-  }
-  vTaskDelete( NULL );
-}
+void anotherTask();
 
 void setup()
 {
@@ -53,12 +44,22 @@ void loop()
   Serial.println("this is ESP32 Task");
   delay(1000);
 }
+
+void anotherTask( void * parameter )
+{
+  for(;;){
+
+  Serial.println("this is another Task");
+  delay(1000);
+
+  }
+  vTaskDelete( NULL );
+}
 ```
 
 ### Salida del código A ###
 ***
 ```
-[...]
 this is another Task
 this is ESP32 Task
 this is another Task
@@ -67,12 +68,30 @@ this is ESP32 Task
 ```
 ### Diagrama de flujo A ###
 ***
-```
-mermaid
+```mermaid
+flowchart TD
+A[Inicio] --> anotherTask
+A --> main_loop
 
+subgraph main_loop
+A1{{"void loop()"}} -->B1("Serial.println()")
+B1 -->C1["delay()"]
+C1 --> A1
+end
+
+subgraph anotherTask
+A2{{"void antoherTask()"}} --> B2["for(;;)"]
+B2 --> C2["Serial.println()"]
+C2 --> D2["delay()"]
+D2 --> B2
+D2 --> E2("vTaskDelete()")
+end
 ```
+
 ***
+
 ***
+
 ## Creación de Semáforo Mutex - Parte B ##
 ***
 
@@ -203,7 +222,6 @@ void loop() {
 ### Salida del código A ###
 ***
 ```
-[...]
 Hi from Task1
 Hi from Task2
 Hi from Task1
@@ -213,6 +231,46 @@ Hi from Task2
 
 ### Diagrama de flujo B ###
 ***
-```
-mermaid
+```mermaid
+flowchart TD
+    subgraph Main
+
+    A[Inicio] --> B(SemaphoreHandle_t)
+    B --> C{{"void setup()"}}
+    C --> main_loop
+    C --> Task1
+    C --> Task2
+        
+        subgraph main_loop
+        direction BT
+        A2{{"void loop()"}} --> B2("delay()")
+        B2 ---> A2
+        end
+
+        subgraph Task1
+        direction TB
+        A3{{"void Task1()"}} --> B3("while(1)")
+        B3 --> C3("xSemaphoreTake()")
+        C3 --> D3("Serial.println()")
+        D3 --> E3("digitalWrite()")
+        E3 --> F3("vTaskDelay()")
+        F3 --> G3("xSemaphoreGive()")
+        G3 --> H3("vTaskDelay()")
+        H3 --> B3
+        end
+
+        subgraph Task2
+        direction TB
+        A4{{"void Task1()"}} --> B4("while(1)")
+        B4 --> C4("xSemaphoreTake()")
+        C4 --> D4("Serial.println()")
+        D4 --> E4("digitalWrite()")
+        E4 --> F4("vTaskDelay()")
+        F4 --> G4("xSemaphoreGive()")
+        G4 --> H4("vTaskDelay()")
+        H4 --> B4
+        end
+
+    end
+    
 ```
