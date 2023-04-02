@@ -1,3 +1,17 @@
+# Informe - Práctica 4
+En esta práctica vamos a trabajar con el wifi y el bluetooth que nos ofrece el ESP32. 
+
+Más concretamente vamos a crear un Webserver PA y otro STA (Para ver como configurar ambas opciones), donde ubicaremos un código *HTML* que nos permita enviar datos de estado de dos leds y recibir inputs de encendido y apagado de los mismos leds.
+
+Después con el bluetooth crearemos una conexión entre un móvil android y nuestro microprocesador ESP32.
+
+***
+## Web Server - STA
+
+Para establecer un *Web server* en modo STA deberemos conectar el **ESP32** a nuestro wifi, para ello usaremos las variables SSID y password para concectarnos. Después utilizaremos el puerto 80 para establecer la comunicación ya que está destinado a http. Usaremos el comando ```WiFi.begin(ssid, password);```para iniciar la conexión wifi con los datos ingresados anteriormente, y ```WiFi.localIP();```para obtener la IP donde se ubicará nuestra página de manera local.
+
+### Codigo Wifi-STA
+***
 ```cpp
 #include <Arduino.h>
 #include <WiFi.h>
@@ -5,7 +19,7 @@
 
 extern String HTML;
 void handle_root();
-//#define HTML "<!DOCTYPE html>\ <html>\<body>\<h1>My Primera Pagina con ESP32 - Station Mode &#128522;</h1>\<p> Holi bb como estas, estas viendo p solo en serio </p></body>\</html>"
+
 
 // SSID & Password
 const char* ssid = "eel-lab029-02 9193";  // Enter your SSID here
@@ -155,3 +169,68 @@ void loop(){
   }
 }
 ```
+***
+### Salida del cógido Wifi-STA
+
+***
+### Diagrama de flujo Wifi-STA
+
+***
+## Web Server - PA
+
+***
+### Código Wifi-PA
+```
+
+```
+***
+### Salida del cógido Wifi-STA
+
+***
+### Diagrama de flujo Wifi-STA
+
+***
+## Bluetooth - Classic
+
+
+***
+### Código Bluetooth-Classic
+```cpp
+#include <Arduino.h>
+#include "BluetoothSerial.h"
+
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+// Las tres línea anteriores comprueban que el Bluetooth esté correctamente habilitado.
+
+BluetoothSerial SerialBT;
+
+void setup() {
+  Serial.begin(115200);
+  SerialBT.begin("ESP32test"); //Inicializamos Bluetooth con un nombre de dispositivo
+  Serial.println("The device started, now you can pair it with bluetooth!");
+}
+
+void loop() { //Aqui mandamos y recibimos información
+  if (Serial.available()) { //Si hay bytes recibidos
+    SerialBT.write(Serial.read()); //Enviamos esos datos via bluetooth al dispositivo conectado
+  }
+  if (SerialBT.available()) {
+    Serial.write(SerialBT.read());
+  }
+  delay(20);
+}
+```
+***
+### Salida del cógido Bluetooth-Classic
+
+***
+### Diagrama de flujo Bluetooth-Classic
+
+***
+## Bluetooth - BLE
+
+
+***
+### Código Bluetooth-BLE
