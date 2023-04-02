@@ -20,7 +20,7 @@ Finalmente, en el ```void loop()``` imprimiremos por pantalla algo para que se v
 
 ### Código A ###
 ***
-```
+```cpp
 #include <Arduino.h>
 
 void anotherTask( void * parameter )
@@ -88,7 +88,7 @@ En el código de dos LEDs hace lo mismo pero con otro LED de forma antagónica. 
 
 ### Codigo B - 1 LED ###
 ***
-```
+```cpp
 #include <Arduino.h>
 //#include <Arduino_FreeRTOS.h> 
 //#include <semphr.h> 
@@ -144,7 +144,7 @@ void Task2(void *pvParameters) {
 
 ### Codigo 2 - 2 leds ###
 ***
-```
+```cpp
 #include <Arduino.h>
 //#include <Arduino_FreeRTOS.h> 
 //#include <semphr.h> 
