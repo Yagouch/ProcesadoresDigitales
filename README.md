@@ -382,8 +382,9 @@ flowchart TD
 ```
 ***
 ## Bluetooth - BLE
+En Bluetooth de Baja Energía los dispositivos pueden ser clientes o servidores. El servidor es encargado de emitir los servicios y el cliente de recibirlos.
 
-En este programa lo que se hace es crear un servicio dentro de un Server en el ESP32. Este servicio tendrá dos caracterísitcas con el mismo UUID, que servirán para enviar y recibir información (bytes).
+En este programa lo que hace es crear un servicio dentro del ESP32 que estará en modo servidor. Este servicio tendrá dos caracterísitcas con el mismo UUID, que servirán para enviar y recibir información (bytes).
 
 El funcionamiento es algo diferente respecto al *Bluetooth Classic*. Debemos inicializar el dispositivo para BLE, crear un Server dentro, añadir un servicio dentro del servidor, y al servicio le añadimos características, a una de ellas la inicializaremos con una cadena de caracteres la cual veremos en formato hexadecimal: "Yago con BLE :)" será (0x 59-61-67-6F-20-63-6F-6E-20-42-4C-45-20-3A-29). Para ejecutar el servicio utilizaremos el Advertising que es para que el server sea visto por los dispositivos clientes que quieran establecer conexión.
 
