@@ -183,7 +183,49 @@ IP address:
 ![Pagina web](images/SS_STA_web.png)
 ***
 ### Diagrama de flujo Wifi-STA
+```mermaid
+flowchart TD
 
+    A[Inicio] --> B(Declarar variables globales)
+    B --> C("WiFiServer server(80)")
+    C --> void_setup
+    void_setup --> H1{{"void loop()"}}
+    H1 --> I1("WiFiClient client = server.available()")
+    I1 --> J1{"if(client)"}
+    J1 --> |NO|H1
+    J1 --> |YES|K1(Declaración de variables locales)
+    K1 --> L1(("while (client.connected())"))
+    L1 --> |TRUE|M1{"if(client.available())"}
+    M1 --> |NO|L1
+    M1 --> |YES|O1("char c = client.read()")
+    O1 --> D("header += c")
+    D --> F{"if(c == '\n')"}
+    F --> |NO|G{"else if (c != '\r')"}
+    G --> |NO|L1
+    G --> |YES|H("currentLine += c")
+    H --> L1
+    F --> |YES|I{"if(currentLine.length()==0)"}
+    I --> |NO|J("else currentLine = ''")
+    J --> L1
+    I --> |YES|K("Leyendo los valores de estado de los pines mandará un código html u otro (HTML web page)")
+    K --> L1
+    L1 --> |FALSE|L("header = ' '")
+    L --> M("client.stop()")
+    M --> N("Serial.println('Client disconnected.')")
+    N --> H1
+
+    subgraph void_setup
+
+        A1(Serial.begin) --> B1(Initializar variables de salida)
+        B1 --> C1("WiFi.begin(ssid, password)")
+        C1 --> D1("while(status != connected)")
+        D1 --> E1("Serial.print( '.' )")
+        E1 --> D1
+        D1 --> F1("Serial.println(WiFi.localIP())")
+        F1 --> G1("server.begin()")
+
+    end
+```
 ***
 ## Web Server - AP
 El modo AP o *Access Point* del *Web Server* del **ESP32** significa que el microprocesador creará su propia red WiFi donde los dispositivos que quieran establecer una comunicación con este se deberán conectar poniendo el nombre (SSID) y la contraseña que hayamos configurado.
@@ -257,9 +299,26 @@ HTTP server started
 ![Pagina web](images/SS_PA_web.png)
 ***
 ### Diagrama de flujo Wifi-AP
+```mermaid
+flowchart TD
 
+    A[Inicio] --> B(Declarar constantes)
+    B --> C("WebServer server(80)")
+    C --> D("void handle_root()")
+    D --> void_setup
+    void_setup --> E{{"void loop()"}}
+    E --> F("server.handleClient()")
+    F --> E
 
+    subgraph void_setup
 
+        A1(Serial.begin) --> B1("Wifi.softAP(ssid,password)")
+        B1 --> C1("Serial.println(WiFi.softAPIP())")
+        C1 --> D1("server.on(' / ', handle_root)")
+        D1 --> E1("server.begin()")
+
+    end
+```
 ***
 ## Bluetooth - Classic
 Estableceremos una comunicación serie entre el microprocesador y un móvil donde hemos instalar una aplicación.
@@ -301,7 +360,26 @@ void loop() { //Aqui mandamos y recibimos información
 
 ***
 ### Diagrama de flujo Bluetooth-Classic
+```mermaid
+flowchart TD
 
+    A[Inicio] --> B(Declarar mensajes de error)
+    B --> C("BluetoothSerial SerialBT")
+    C --> void_setup
+    void_setup --> D{{"void loop()"}}
+    D --> E("if (Serial.available())")
+    D --> F("if (SerialBT.available()) ")
+    E --> G("delay(20)")
+    F --> G
+    G --> D
+
+    subgraph void_setup
+
+        A1(Serial.begin) --> B1("SerialBT.begin('ESP32test')")
+        B1 -->C1("Serial.println()")
+
+    end
+```
 ***
 ## Bluetooth - BLE
 
