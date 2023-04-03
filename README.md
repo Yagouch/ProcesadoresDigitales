@@ -297,13 +297,19 @@ void loop() { //Aqui mandamos y recibimos información
 ### Salida del cógido Bluetooth-Classic
 ![Terminal-BT](images/SS_Terminal_BT_classic.png)
 
-<img src="images/SS_movil_BT_classic.jpg" wifth="400" height="800">
+<img src="images/SS_movil_BT_classic.jpg" width="300">
 
 ***
 ### Diagrama de flujo Bluetooth-Classic
 
 ***
 ## Bluetooth - BLE
+
+En este programa lo que se hace es crear un servicio dentro de un Server en el ESP32. Este servicio tendrá dos caracterísitcas con el mismo UUID, que servirán para enviar y recibir información (bytes).
+
+El funcionamiento es algo diferente respecto al *Bluetooth Classic*. Debemos inicializar el dispositivo para BLE, crear un Server dentro, añadir un servicio dentro del servidor, y al servicio le añadimos características, a una de ellas la inicializaremos con una cadena de caracteres la cual veremos en formato hexadecimal: "Yago con BLE :)" será (0x 59-61-67-6F-20-63-6F-6E-20-42-4C-45-20-3A-29). Para ejecutar el servicio utilizaremos el Advertising que es para que el server sea visto por los dispositivos clientes que quieran establecer conexión.
+
+En el loop imprimiremos por pantalla el valor de la característica que hemos creado para ver como el dispostivo cliente puede modificarlo.
 
 ***
 ### Codigo Bluetooth-BLE SERVER
@@ -354,6 +360,14 @@ void loop() {
 ```
 ***
 ### Salida del cógido Bluetooth-BLE SERVER
+READ
+![BLE_server_1](images/SS_Monitor_BLE_server.png)
+<img src="images/SS_BLE_movil_1.jpg" width="300">
+
+WRITE
+
+<img src="images/SS_BLE_movil_2.jpg" width="300">
+
+![BLE_server_2](images/SS_Monitor_BLE_server_2.png)
 
 ***
-### Diagrama de flujo Bluetooth-BLE
