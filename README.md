@@ -1,7 +1,72 @@
-#include <Arduino.h>
+# Informe - Práctica 5 - Protocolo I2C
+En esta práctica...
 
+***
+## Escáner de dispositivos I2C
+El escáner...
+***
+### Código de Escáner
+```cpp
+#include <Arduino.h>
 #include <Wire.h>
-//#include <Adafruit_GFX.h>
+ 
+void setup() {
+  Wire.begin();
+  Serial.begin(115200);
+  Serial.println("\nI2C Scanner");
+}
+ 
+void loop() {
+  byte error, address;
+  int nDevices;
+  Serial.println("Scanning...");
+  nDevices = 0;
+  for(address = 1; address < 127; address++ ) {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    if (error == 0) {
+      Serial.print("I2C device found at address 0x");
+      if (address<16) {
+        Serial.print("0");
+      }
+      Serial.println(address,HEX);
+      nDevices++;
+    }
+    else if (error==4) { // El valor de estado 4 significa que no se recibió ACK (Acknowledge) del dispositivo esclavo después de enviar la dirección de registro o de memoria.
+      Serial.print("Unknow error at address 0x");
+      if (address<16) {
+        Serial.print("0");
+      }
+      Serial.println(address,HEX);
+    }    
+  }
+  if (nDevices == 0) {
+    Serial.println("No I2C devices found\n");
+  }
+  else {
+    
+    Serial.print("Done. ");
+    Serial.print(nDevices,2);
+    Serial.print(" devices found!\n");
+  }
+  delay(5000);          
+}
+```
+
+***
+
+### Salida de cógido del Escáner
+![SS_I2C_output](images/SS_I2C_Scanner.png)
+<center><img src="images/foto_montaje_scanner.jpg" width="600"></center>
+***
+
+## Diplay OLED I2C
+
+***
+### Código del Display OLED
+```cpp
+#include <Arduino.h>
+#include <Wire.h>
 #include <Adafruit_SSD1306.h>
  
 // Definir constantes
@@ -60,9 +125,6 @@ static const unsigned char PROGMEM datos_imagen[414] = {
     0xfe, 0x79, 0x33, 0x07, 0x07, 0x03, 0x73, 0x07, 0xf8, 
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf8
 };
-
-
-
 
 // Temporizador
 unsigned long marcaTiempoDate = 0;
@@ -149,7 +211,11 @@ void loop() {
 
   display.drawBitmap(55,18, datos_imagen, 69, 46, SSD1306_WHITE);
 
- 
   // Enviar a pantalla
   display.display();
 }
+```
+***
+### Salida del código del DISPLAY OLED
+![SS_display_OLED](images/SS_Display_contador_output.png)
+![foto_display_OLED](images/foto_display_OLED.JPG)
