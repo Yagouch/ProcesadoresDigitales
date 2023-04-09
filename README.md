@@ -1,14 +1,14 @@
 # Informe - Práctica 3 #
 ***
-En esta práctica gracias al uso del **Sistema Operativo a Tiempo Real** *FreeRTOS*, el cual nos permite la creación de procesos/tareas idependientes, vamos a aprender el uso de las **tasks** para que nuestro porcesador sea capaz de ejecutar varias acciones en un tiempo reducido. Además veremos **los semáforos y los mutex** para poder manipular estas tareas a voluntad o de forma automatizada. Nuestro objetivo es que usando las colas podremos ejecutar unas acciones entre los delays de otras, con el resultado de que para la percepción humana se estén ejecutando varios procesos a la vez.
+En esta práctica gracias al uso del **Sistema Operativo a Tiempo Real** *FreeRTOS*, el cual nos permite la creación de procesos/tareas idependientes, vamos a aprender el uso de las **tasks** para que nuestro procesador sea capaz de ejecutar varias acciones en un tiempo reducido. Además veremos **los semáforos y los mutex** para poder manipular estas tareas a voluntad o de forma automatizada. Nuestro objetivo es que usando las colas podremos ejecutar unas acciones entre los delays de otras, con el resultado de que para la percepción humana se estén ejecutando varios procesos a la vez.
 
 ## Creación de *Tasks* - Parte A ##
 ***
-En este primer código vamos a crear una *Task* que se ejecutará en el delay del ```void loop()```. En el ```void setup()``` crearemos la tarea con el ``` xTaskDelete() ``` donde colocaré los parámetros: ``` Task_Function, Task_Name, Stack_size, Parameter, Task_Priority, Task_Handle ```, donde:
+En este primer código vamos a crear una *Task* que se ejecutará en el delay del ```void loop()```. En el ```void setup()``` crearemos la tarea con el ``` xTaskDelete() ``` donde colocaremos los parámetros: ``` Task_Function, Task_Name, Stack_size, Parameter, Task_Priority, Task_Handle ```, donde:
 
 ```Task_function```: Es el nombre de la función que se ejecutará cuando llamemos a la tarea.
 ```Task_Name```: Es el nombre de la tarea.
-```Stack_size```: Es el tamaño de palabras (agrupación de bytes) que desdicamos a la ejecución de la tarea.
+```Stack_size```: Es el tamaño de palabras (agrupación de bytes) que dedicamos a la ejecución de la tarea.
 ```Parameter```: Es un valor que es enviado como parámetro a la tarea.
 ```Task_Priority```: Es la prioridad a la que se ejecutará la tarea. (Cuando se quieren ejecutar dos tareas a la vez, se ejecutará la de mayor prioridad mientras que la otra se pone en la cola)
 ```Task_Handle```: Es para mantener el trastro de la tarea creada.
