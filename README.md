@@ -321,7 +321,7 @@ flowchart TD
 ```
 ***
 ## Bluetooth - Classic
-Estableceremos una comunicación serie entre el microprocesador y un móvil donde hemos instalar una aplicación.
+Estableceremos una comunicación serie entre el microprocesador y un móvil donde hemos instalado una aplicación.
 
 ***
 ### Código Bluetooth-Classic
