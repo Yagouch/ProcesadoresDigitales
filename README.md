@@ -5,7 +5,10 @@ En la primera parte de la práctica tenemos el código que nos servirá para esc
 De esta manera podremos identificar los dispositivos I2C disponibles en el bus y sus direcciones correspondientes.
 ***
 ## Escáner de dispositivos I2C
-El escáner I2C 
+El escáner I2C es una herramienta utilizada para idetificar dispositivos conectados a un bus I2C de la ESP32.
+En primer lugar, el escáner I2C realizará la inicialización del bus I2C (configurará las líneas SDA y SCL).
+A continuación, hará un escaneo de direcciones.
+Finalmente, hará un registro de los dispositivos encontrados y sus direcciones.
 ***
 ### Código de Escáner
 ```cpp
