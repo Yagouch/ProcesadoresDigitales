@@ -13,23 +13,27 @@ Finalmente, hará un registro de los dispositivos encontrados y sus direcciones.
 ***
 ### Código de Escáner
 ```cpp
-//Declaración de la bibliotecas:
-#include <Arduino.h> 
-#include <Wire.h>
+//Declaración de las bibliotecas:
+#include <Arduino.h> //ésta biblioteca es necesaria par el funcionamiento básico de Arduino.
+#include <Wire.h>//ésta biblioteca se utiliza para la comunicación I2C
  
 void setup() {
+  //Se inicia la comunicación I2C:
   Wire.begin();
-  Serial.begin(115200);
-  Serial.println("\nI2C Scanner");
+  Serial.begin(115200);//Se inicia la comunicación serie a una velocidad de 115200 baudios
+  Serial.println("\nI2C Scanner");//Se muestra un mensaje de encabezado en el monitor serial
 }
  
 void loop() {
+  //Aquí se realiza el escaneo de  dispositivos I2C
   byte error, address;
   int nDevices;
   Serial.println("Scanning...");
   nDevices = 0;
   for(address = 1; address < 127; address++ ) {
-    Wire.beginTransmission(address);
+  //Se itera a través de las direcciones de 1 a 127 y 
+  //se intenta establecer comunicación con cada dirección
+    Wire.beginTransmission(address);//se verifica si hay un error en la transmisión
     error = Wire.endTransmission();
     if (error == 0) {
       Serial.print("I2C device found at address 0x");
