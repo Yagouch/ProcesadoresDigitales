@@ -13,7 +13,7 @@ Finalmente, hará un registro de los dispositivos encontrados y sus direcciones.
 ***
 ### Código de Escáner
 ```cpp
-
+//Declaración de la bibliotecas:
 #include <Arduino.h> 
 #include <Wire.h>
  
