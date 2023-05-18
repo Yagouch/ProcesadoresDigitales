@@ -1,0 +1,59 @@
+/*
+    Practica I2S - Streaming Flaix FM
+*/
+#include "Arduino.h"
+
+#include "WiFiMulti.h"
+#include "Audio.h"
+#include "SPI.h"
+#include "SD.h"
+#include "FS.h"
+
+// Digital I/O used
+#define SD_CS          5
+#define SPI_MOSI      23
+#define SPI_MISO      19
+#define SPI_SCK       18
+#define I2S_DOUT      25
+#define I2S_BCLK      27
+#define I2S_LRC       26
+
+Audio audio;
+WiFiMulti wifiMulti;
+String ssid =     "MOVISTAR_D84E";
+String password = ";9o2a3ei5RY#!:";
+
+
+void setup() {
+    pinMode(SD_CS, OUTPUT);      digitalWrite(SD_CS, HIGH);
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+    SPI.setFrequency(1000000);
+    Serial.begin(115200);
+    SD.begin(SD_CS);
+    WiFi.mode(WIFI_STA);
+    wifiMulti.addAP(ssid.c_str(), password.c_str());
+    wifiMulti.run();
+    if(WiFi.status() != WL_CONNECTED){
+        WiFi.disconnect(true);
+        wifiMulti.run();
+    }
+    audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
+    audio.setVolume(12);
+
+//    audio.connecttohost("http://www.wdr.de/wdrlive/media/einslive.m3u");
+//    audio.connecttohost("http://somafm.com/wma128/missioncontrol.asx"); //  asx
+//    audio.connecttohost("http://mp3.ffh.de/radioffh/hqlivestream.aac"); //  128k aac
+//    audio.connecttohost("http://mp3.ffh.de/radioffh/hqlivestream.mp3"); //  128k mp3
+      audio.connecttohost("http://nodo01-cloud01.streaming-pro.com:8000/flaixfm.mp3");
+}
+
+void loop()
+{
+    audio.loop();
+    if(Serial.available()){ // put streamURL in serial monitor
+        audio.stopSong();
+        String r=Serial.readString(); r.trim();
+        if(r.length()>5) audio.connecttohost(r.c_str());
+        log_i("free heap=%i", ESP.getFreeHeap());
+    }
+}
