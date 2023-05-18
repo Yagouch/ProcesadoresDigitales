@@ -1,0 +1,65 @@
+/*
+  Practica SPI - Lectura y escritura SD (Impresion por pantalla)
+*/
+#include <SPI.h>
+#include <SD.h>
+
+File myFile;
+
+void setup()
+{
+  Serial.begin(115200);
+  Serial.print("Iniciando SD ...");
+  if (!SD.begin(5)) {
+    Serial.println("No se pudo inicializar");
+    return;
+  }
+  Serial.println("inicializacion exitosa");
+ 
+// Imprimir contenido previo
+
+  myFile = SD.open("/archivo.txt");//abrimos  el archivo 
+  if (myFile) {
+    Serial.println("archivo.txt sin modificar:");
+    while (myFile.available()) {
+    	Serial.write(myFile.read());
+    }
+    myFile.close(); //cerramos el archivo
+  } else {
+    Serial.println("Error al abrir el archivo");
+  }
+
+// Escribir mas texto
+
+  myFile = SD.open("/archivo.txt", FILE_APPEND); // Abrimos el archivo para escribir, con FILE_APPEND podremos añadir código al ya existente
+  // FILE_WRITE sobreescribirá el texto
+  
+  if (myFile) {
+    Serial.println("Escribiendo en el archivo:");
+    myFile.println("Hola, este es un texto de prueba de Yago"); // Escribimos una línea de texto en el archivo
+    myFile.close(); // Cerramos el archivo
+    Serial.println("Escritura finalizada");
+  } else {
+    Serial.println("Error al abrir el archivo");
+  }
+
+// Mostrar de nuevo el contenido
+
+myFile = SD.open("/archivo.txt");//abrimos  el archivo 
+  if (myFile) {
+    Serial.println("archivo.txt modificado:");
+    while (myFile.available()) {
+    	Serial.write(myFile.read());
+    }
+    myFile.close(); //cerramos el archivo
+  } else {
+    Serial.println("Error al abrir el archivo");
+  }
+
+}
+
+void loop()
+{
+  
+}
+
