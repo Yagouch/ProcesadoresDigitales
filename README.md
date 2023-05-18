@@ -1,9 +1,11 @@
 # Informe - Práctica 5 - Protocolo I2C
-En esta práctica...
-
+En esta práctica vamos a trabajar con el protocolo I2C. 
+Colocaremos varios dispositivos I2C al ESP32 (escáner y Display OLED I2C).
+En la primera parte de la práctica tenemos el código que nos servirá para escanear los dispositivos I2C conectados al ESP32 y muestrará la información correspondiente en el monitor serial. 
+De esta manera podremos identificar los dispositivos I2C disponibles en el bus y sus direcciones correspondientes.
 ***
 ## Escáner de dispositivos I2C
-El escáner...
+El escáner I2C 
 ***
 ### Código de Escáner
 ```cpp
