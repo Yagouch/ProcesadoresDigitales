@@ -35,7 +35,7 @@ void loop() {
   //se intenta establecer comunicación con cada dirección
     Wire.beginTransmission(address);//se verifica si hay un error en la transmisión
     error = Wire.endTransmission();
-    if (error == 0) {
+    if (error == 0) { //Si no hay errores, se muestra un mensaje indicando que se encontró un dispositivo I2C en la dirección especificada. La dirección se muestra en hexadecimal.
       Serial.print("I2C device found at address 0x");
       if (address<16) {
         Serial.print("0");
@@ -51,16 +51,16 @@ void loop() {
       Serial.println(address,HEX);
     }    
   }
-  if (nDevices == 0) {
+  if (nDevices == 0) {// Si no se encuentran dispositivos I2C (nDevices == 0), se muestra un mensaje indicando que no se encontraron dispositivos.
     Serial.println("No I2C devices found\n");
   }
-  else {
+  else {// Si se encuentran dispositivos I2C, se muestra la cantidad total de dispositivos encontrados.
     
     Serial.print("Done. ");
     Serial.print(nDevices,2);
     Serial.print(" devices found!\n");
   }
-  delay(5000);          
+  delay(5000);//se espera un período de 5 segundos antes de iniciar otro escaneo.          
 }
 ```
 
