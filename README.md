@@ -88,7 +88,9 @@ void loop() {
 Adafruit_SSD1306 display(ANCHO_PANTALLA, ALTO_PANTALLA, &Wire, -1);//Se crea un objeto de la clase llamado display que representa la pantalla OLED:
  
 //Imagen
-static const unsigned char PROGMEM datos_imagen[414] = {//matriz de datos de imagen en formato de memoria flash (PROGMEM). Esta matriz representa una imagen que se mostrará en la pantalla OLED
+static const unsigned char PROGMEM datos_imagen[414] = {
+//matriz de datos de imagen en formato de memoria flash (PROGMEM). 
+//Esta matriz representa una imagen que se mostrará en la pantalla OLED
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf8, 
     0xff, 0xf0, 0x03, 0xff, 0xff, 0xfe, 0x00, 0x7f, 0xf8, 
     0xff, 0xc0, 0x00, 0x7f, 0xff, 0xf0, 0x00, 0x1f, 0xf8, 
