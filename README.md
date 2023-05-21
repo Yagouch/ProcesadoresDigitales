@@ -78,14 +78,14 @@ void loop() {
 ```cpp
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SSD1306.h>//para controlar una pantalla OLED
  
-// Definir constantes
+// Definir constantes. Se definen constantes para el ancho y alto de la pantalla OLED.
 #define ANCHO_PANTALLA 128 // ancho pantalla OLED
 #define ALTO_PANTALLA 64 // alto pantalla OLED
  
 // Objeto de la clase Adafruit_SSD1306
-Adafruit_SSD1306 display(ANCHO_PANTALLA, ALTO_PANTALLA, &Wire, -1);
+Adafruit_SSD1306 display(ANCHO_PANTALLA, ALTO_PANTALLA, &Wire, -1);//Se crea un objeto de la clase llamado display que representa la pantalla OLED:
  
 //Imagen
 static const unsigned char PROGMEM datos_imagen[414] = {
@@ -141,7 +141,7 @@ static const unsigned char PROGMEM datos_imagen[414] = {
 unsigned long marcaTiempoDate = 0;
 unsigned long tiempoRefreshDate = 1000;
  
-// Variables almacena tiempo millis
+// Variables almacena tiempo millis. Son variables para almacenar el tiempo en días, horas, minutos y segundos.
 int dias;
 int horas;
 int minutos;
