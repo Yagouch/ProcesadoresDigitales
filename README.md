@@ -1,3 +1,191 @@
+# Proyecto - Reproductor MP3
+## Yago Carballo Barroso y Ramon Llobet Duch
+### **Versiones**
+### *1.0*
+Primera versión del proyecto, creando una página web con un botón que permita pausar y reanudar la canción.
+
+```ino
+#include<Arduino.h>
+
+#include "Audio.h"
+#include "SD.h"
+#include "FS.h"
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+
+// I/O SPI 
+#define SD_CS         19
+#define SPI_MOSI      23
+#define SPI_MISO      5
+#define SPI_SCK       18
+
+// I/O I2S
+#define I2S_DOUT      25
+#define I2S_BCLK      27
+#define I2S_LRC       26
+
+const char* ssid = "MOVISTAR_D84E";
+const char* password = ";9o2a3ei5RY#!:";
+
+AsyncWebServer server(80);
+
+Audio audio;
+
+void setup(){
+Serial.begin(115200);
+// ----------WEB----------
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Conectando a WiFi...");
+  }
+
+  Serial.println("Conectado a la red WiFi");
+  Serial.print("Dirección IP: ");
+  Serial.println(WiFi.localIP());
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    String html = "<html><body>";
+    html += "<h1>Control de música</h1>";
+    html += "<button onclick=\"toggleMusic()\">Toggle Music</button>";
+    html += "<script>function toggleMusic() {var xhr = new XMLHttpRequest(); xhr.open('GET', '/toggle', true); xhr.send();}</script>";
+    html += "</body></html>";
+    request->send(200, "text/html", html);
+  });
+
+  server.on("/toggle", HTTP_GET, [](AsyncWebServerRequest *request){
+    audio.pauseResume();
+    request->send(200);
+  });
+
+  server.begin();
+
+pinMode(SD_CS, OUTPUT);
+digitalWrite(SD_CS, HIGH);
+SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+SD.begin(SD_CS);
+audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
+audio.setVolume(10); // 0...21
+
+audio.connecttoFS(SD, "002.mp3");
+
+}
+
+void loop(){
+audio.loop();
+}
+```
+### *2.0*
+Segunda versión del proyecto. He añadido una matriz unidimensional de canciones, y dos botones para mover un index sobre esa matriz, y poder alternar entre canciones.
+```ino
+#include<Arduino.h>
+
+#include "Audio.h"
+#include "SD.h"
+#include "FS.h"
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+
+// I/O SPI 
+#define SD_CS         19
+#define SPI_MOSI      23
+#define SPI_MISO      5
+#define SPI_SCK       18
+
+// I/O I2S
+#define I2S_DOUT      25
+#define I2S_BCLK      27
+#define I2S_LRC       26
+
+const char* ssid = "MOVISTAR_D84E";
+const char* password = ";9o2a3ei5RY#!:";
+
+AsyncWebServer server(80);
+
+Audio audio;
+
+const int numSongs = 4;
+const char* songFiles[numSongs] = {"/rock/ACDC-You_Shook_Me_All_Night_Long.mp3","/rock/JimiHendrix-All_Along_The_Watchtower.mp3","/rock/Kansas-Carry_On_Wayward_Son.mp3","/rock/TheBeatles-A_Day_In_The_Life.mp3"};
+int SongIndex = 0;
+
+void setup(){
+Serial.begin(115200);
+// ----------WEB----------
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Conectando a WiFi...");
+  }
+
+  Serial.println("Conectado a la red WiFi");
+  Serial.print("Dirección IP: ");
+  Serial.println(WiFi.localIP());
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    String html = "<html><body>";
+    html += "<h1>Control de musica</h1>";
+    html += "<h4><strong>Se recomienda pausar antes de pasar de cancion</strong></h4>";
+    html += "<button onclick=\"toggleMusic()\">Toggle Music</button>";
+    html += "<button onclick=\"nextMusic()\">Next Music</button>";
+    html += "<button onclick=\"previousMusic()\">Previous Music</button>";
+    
+    // Generar la lista de canciones en la página
+    html += "<ul>";
+    for (int i = 0; i < numSongs; i++) {
+      html += "<li>";
+      html += songFiles[i];
+      html += "</li>";
+    }
+    html += "</ul>";
+
+    html += "<script>function toggleMusic() {var xhr = new XMLHttpRequest(); xhr.open('GET', '/toggle', true); xhr.send();}";
+    html += "function nextMusic() {var xhr = new XMLHttpRequest(); xhr.open('GET', '/next', true); xhr.send();}";
+    html += "function previousMusic() {var xhr = new XMLHttpRequest(); xhr.open('GET', '/previous', true); xhr.send();}</script>";
+    html += "</body></html>";
+    request->send(200, "text/html", html);
+  });
+
+  server.on("/toggle", HTTP_GET, [](AsyncWebServerRequest *request){
+    audio.pauseResume();
+    request->send(200);
+  });
+  server.on("/next", HTTP_GET, [](AsyncWebServerRequest *request){
+    audio.pauseResume();
+    SongIndex++;
+    if (SongIndex>=numSongs) SongIndex=0;
+    audio.connecttoFS(SD, songFiles[SongIndex]);
+    request->send(200);
+  });
+  server.on("/previous", HTTP_GET, [](AsyncWebServerRequest *request){
+    audio.pauseResume();
+    SongIndex--;
+    if (SongIndex<0) SongIndex=numSongs-1;
+    audio.connecttoFS(SD, songFiles[SongIndex]);
+    request->send(200);
+  });
+
+  server.begin();
+
+pinMode(SD_CS, OUTPUT);
+digitalWrite(SD_CS, HIGH);
+SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+SD.begin(SD_CS);
+audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
+audio.setVolume(10); // 0...21
+
+audio.connecttoFS(SD, songFiles[SongIndex]);
+
+}
+
+void loop(){
+audio.loop();
+}
+```
+### *3.0*
+En esta versión se ha añadido una matriz de dos dimensiones, las columnas son los álbumes y las filas las canciones de cada álbum, se han añadido dos botones adicionales a la página para pasar de álbum y se ha mejorado visualmente con CSS, aparte de añadir el contenido de la matriz.
+```ino
 #include<Arduino.h>
 
 #include "Audio.h"
@@ -144,8 +332,9 @@ Serial.begin(115200);
     request->send(200);
   });
 
-  server.begin();
+server.begin();
 
+//---------I2S y SPI----------
 pinMode(SD_CS, OUTPUT);
 digitalWrite(SD_CS, HIGH);
 SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
@@ -153,14 +342,12 @@ SD.begin(SD_CS);
 audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
 audio.setVolume(4); // 0...21
 
-//--------pruebas--------
 archivo = SD.open("/canciones.txt");
 String linea;
 String prov;
 String Genero;
 
 if (archivo){
-//while(archivo.available()){
   for(int i=0;i<numGenre;i++){
 
     Genero = archivo.readStringUntil('.');
@@ -176,33 +363,16 @@ if (archivo){
     }
 
   }
-//}
-archivo.close();
+  archivo.close();
 } else {
   Serial.println("Error al abrir el archivo");
 }
 
-      Serial.println(songFiles[0][0]);
-      Serial.println(songFiles[0][1]);
-/*
-for (int i = 0; i < numSongs; i++) {
-  for (int j = 0; j < numGenre; j++) {
-    Serial.print(songFiles[i][j]);
-    Serial.print(" ");
-  }
-  Serial.println("");
-}
-*/
-
-//--------pruebas--------
-
 audio.connecttoFS(SD, songFiles[SongIndex][GenreIndex]);
-
 
 }
 
 void loop(){
-
 audio.loop();
-
 }
+```
