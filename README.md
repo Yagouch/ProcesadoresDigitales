@@ -186,7 +186,7 @@ audio.loop();
 ### *3.0*
 En esta versión se ha añadido una matriz de dos dimensiones, las columnas son los álbumes y las filas las canciones de cada álbum, se han añadido dos botones adicionales a la página para pasar de álbum y se ha mejorado visualmente con CSS, aparte de añadir el contenido de la matriz.
 
-Configura y utiliza una ESP32 como un servidor web que permite controlar la reproducción de audio de diferentes canciones y géneros. Utiliza una tarjeta SD para almacenar los archivos de música y se comunica con un módulo de audio a través de las interfaces I2S y SPI. Además, muestra una página web que permite controlar la reproducción de audio y muestra una lista de canciones organizadas por género.
+Así pues, ahora podremos controlar la reproducción de audio de diferentes canciones y géneros. Utilizamos una tarjeta SD para almacenar los archivos de música que se comunica con un módulo de audio a través de las interfaces I2S y SPI. Además, muestra una página web que permite controlar la reproducción de audio y muestra una lista de canciones organizadas por género.
 
 ```ino
 #include<Arduino.h>
