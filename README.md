@@ -395,9 +395,11 @@ void loop(){
 audio.loop();
 }
 
+```
 ### *4.0*
-Cuarta versión del proyecto. Se añade y se calcula una FFT en la página web para poder mostrar visualmente  el espectro de frecuencias de una canción en tiempo real mientras ésta se está reproduciendo. 
-De ésta manera obtendremos la información sobre las diferentes frecuencias presentes en la canción (agudos,medios y graves).
+En esta versión del proyecto se calcula una FFT en la página web para poder mostrar visualmente  el espectro de frecuencias de una canción en tiempo real mientras ésta se está reproduciendo. 
+De esta manera podremos obtener la información sobre las diferentes frecuencias presentes en la canción (agudos,medios y graves).
+
 ```ino
 
 #include<Arduino.h>
