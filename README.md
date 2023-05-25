@@ -185,6 +185,9 @@ audio.loop();
 ```
 ### *3.0*
 En esta versión se ha añadido una matriz de dos dimensiones, las columnas son los álbumes y las filas las canciones de cada álbum, se han añadido dos botones adicionales a la página para pasar de álbum y se ha mejorado visualmente con CSS, aparte de añadir el contenido de la matriz.
+
+Configura y utiliza una ESP32 como un servidor web que permite controlar la reproducción de audio de diferentes canciones y géneros. Utiliza una tarjeta SD para almacenar los archivos de música y se comunica con un módulo de audio a través de las interfaces I2S y SPI. Además, muestra una página web que permite controlar la reproducción de audio y muestra una lista de canciones organizadas por género.
+
 ```ino
 #include<Arduino.h>
 
@@ -211,19 +214,21 @@ const char* ssid = "MOVISTAR_D84E";
 const char* password = ";9o2a3ei5RY#!:";
 
 AsyncWebServer server(80);
+//se crea una instancia del objeto AsyncWebServer para manejar las solicitudes HTTP en el puerto 80
 
 Audio audio;
 File archivo; // Para lectura de fichero
 
 const int numSongs = 4;
 const int numGenre = 2;
-const char* songFiles[numSongs][numGenre];
+const char* songFiles[numSongs][numGenre];//matriz de punteros a char que almacena los nombres de archivo de las canciones para cada género.
 String GenreNames[numGenre];
 int SongIndex = 0;
 int GenreIndex = 0;
 
 
 String URLconverter(const String& linea,const String& Genre){
+//se utiliza para convertir una línea de texto en una URL válida para acceder a un archivo de canción
 String resultado = "/" + Genre + "/" + linea + ".mp3";
 return resultado;
 }
@@ -242,8 +247,10 @@ Serial.begin(115200);
   Serial.println("Conectado a la red WiFi");
   Serial.print("Dirección IP: ");
   Serial.println(WiFi.localIP());
-
+  // Configuración del servidor web
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/"
+  // Genera y envía la página HTML con los controles y la lista de canciones
     String html = "<html><head><style>";
 
     html += "body {font-family: Helvetica, Arial; background-color: #f2f2f2;}";
@@ -300,10 +307,14 @@ Serial.begin(115200);
   });
 
   server.on("/toggle", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/toggle"
+  // Pausa o reanuda la reproducción de audio
     audio.pauseResume();
     request->send(200);
   });
   server.on("/next", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/next"
+  // Cambia a la siguiente canción
     audio.pauseResume();
     SongIndex++;
     if (SongIndex>=numSongs) SongIndex=0;
@@ -311,6 +322,8 @@ Serial.begin(115200);
     request->send(200);
   });
   server.on("/previous", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/previous"
+  // Cambia a la canción anterior
     audio.pauseResume();
     SongIndex--;
     if (SongIndex<0) SongIndex=numSongs-1;
@@ -318,6 +331,8 @@ Serial.begin(115200);
     request->send(200);
   });
   server.on("/Gnext", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/Gnext"
+  // Cambia al siguiente género y reinicia la lista de canciones
     audio.pauseResume();
     GenreIndex++; SongIndex=0;
     if (GenreIndex>=numGenre) GenreIndex=0;
@@ -325,6 +340,8 @@ Serial.begin(115200);
     request->send(200);
   });
   server.on("/Gprevious", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Manejador de la ruta "/Gprevious"
+  // Cambia al género anterior y reinicia la lista de canciones
     audio.pauseResume();
     GenreIndex--; SongIndex=0;
     if (GenreIndex<0) GenreIndex=numGenre-1;
@@ -333,15 +350,17 @@ Serial.begin(115200);
   });
 
 server.begin();
-
+// Configuración de SPI y SD
 //---------I2S y SPI----------
 pinMode(SD_CS, OUTPUT);
 digitalWrite(SD_CS, HIGH);
 SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
 SD.begin(SD_CS);
+// Configuración de I2S y audio
 audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
-audio.setVolume(4); // 0...21
+audio.setVolume(4); // Volumen de reproducción. 0...21 
 
+// Lectura del archivo "canciones.txt
 archivo = SD.open("/canciones.txt");
 String linea;
 String prov;
@@ -367,7 +386,7 @@ if (archivo){
 } else {
   Serial.println("Error al abrir el archivo");
 }
-
+// Conexión a la primera canción y género
 audio.connecttoFS(SD, songFiles[SongIndex][GenreIndex]);
 
 }
