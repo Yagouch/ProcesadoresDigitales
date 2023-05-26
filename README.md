@@ -1,7 +1,8 @@
-# Informe. Práctica 1 #
----
-### Código ###
-```
+# Práctica 1 - Blink #
+## Yago Carballo Barroso y Ramón Llobet Duch
+En esta práctica produciremos un parpadeo periodico de un led y se utilizará la salida serie para depurar el programa.
+### **Código** ###
+```ino
 #include <Arduino.h>
 
 const int potPin = 15; //Pin al que conectaremos el voltaje
@@ -33,9 +34,9 @@ void loop() {
 }
 ```
 
-### Diagrama de flujo ###
+### **Diagrama de flujo** ###
 
-<div class="mermaid">
+```mermaid
 flowchart TD
     A(Inicio) --> B[Declarar el pin 23 como salida]
     B --> C[1. Lectura nivel de voltaje  : Pin 15]
@@ -47,9 +48,9 @@ flowchart TD
     H --> I[6. Asignar a pin 23 nivel bajo de voltaje]
     I --> J[Delay de 2s '2000ms']
     J --> C
-</div>
+```
 
-### Diagrama de tiempos ###
+### **Diagrama de tiempos** ###
 **Nota:** Como no sabemos cuantos ciclos de reloj hay en un segundo, intuimos que pasan más ciclos de los que visualmente se ven. (ipp=Imprimir por pantalla)
 ```wavedrom
 { signal : [
@@ -57,5 +58,50 @@ flowchart TD
   {name: "led", wave: "0...1....0...."},
   {name: "ipp", wave: "01.0...10....."},
   {name: "lectura", wave: "10............"},
+]}
+```
+# Ejercicio voluntario - Temperatura #
+En esta parte el objetivo es leer el valor del sensor de temperatura interno y sacarlo por el puerto serie.
+### **Código** ###
+
+```ino
+#include <Arduino.h>
+
+float measurement = 0; //Variable donde se almacenará los valores de temperatura
+
+void setup() {
+
+  Serial.begin(115200); //Inicializamos el puerto serie
+  measurement = temperatureRead(); //Llamamos a la función que lee la temperatura
+
+}
+
+void loop() {
+  
+  Serial.print("Hall sensor measurement: ");
+  Serial.println(measurement); //Imprimimos por pantalla el valor de la temperatura
+
+  delay(1000);
+
+}
+```
+
+### **Diagrama de flujo** ###
+
+```mermaid
+flowchart TD
+    A(Inicio) --> B[Asignar la función de lectura de temperatura]
+    B --> C[1. Imprimir la lectura de temperatura]
+    C --> D[Delay de 1s '1000ms']
+    D --> C
+```
+
+### **Diagrama de tiempos** ###
+**Nota:** ipp=Imprimir por pantalla.
+```wavedrom
+{ signal : [
+  {name: "accion", wave: "57575757", data: "1 delay 1 delay 1 delay 1 delay"},
+  {name: "ipp", wave: "10101010"},
+  {name: "lectura", wave: "1......."},
 ]}
 ```
