@@ -4,13 +4,16 @@ En esta práctica vamos a trabajar con el protocolo de comunicación I2S para la
 Así pues, reproduciremos música des de la memoria interna (Archivo aac desde PROGMEM), desde una targeta SD (archivos WAVE y MP3) y retransmitiremos una emisora de radio en directo utilizando conexión WiFi y una tarjeta SD.
 ***
 
-![Texto alternativo](images/IMG-3975.JPG)
-
 ## Reproducción desde memoria interna (Archivo aac desde PROGMEM)
 El siguiente código configura la ESP32 para generar sonido utilizando un archivo de audio en formato AAC. 
 El archivo de audio se lee desde la memoria de programa y se envía a la salida de audio utilizando el protocolo I2S. 
 El bucle principal del programa verifica si el generador de audio está en funcionamiento y, si es así, genera el audio.
 Si el generador de audio se detiene, se muestra un mensaje y se espera un segundo antes de reiniciar el bucle.
+
+La siguiente imagen muestra el cableado entre el ESP32, la placa de conexión de
+audio MAX98357 I2S y el altavoz:
+
+![imatge](images/IMG-3975.JPG)
 
 ```ino
 //Bibliotecas
