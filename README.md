@@ -1,7 +1,7 @@
 # PRACTICA 7 - I2S  
 ## Yago Carballo Barroso y Ramon Llobet Duch
 En esta práctica vamos a trabajar con el protocolo de comunicación I2S para la ESP32, el cual se usa para transferir señales de sonido digitales.
-Así pues, reproduciremos música des de la memoria interna, desde una targeta SD, retransmitiremos una emisora de radio en directo y por último realizaremos un analizador de espectro con un micrófono I2S.
+Así pues, reproduciremos música des de la memoria interna (Archivo aac desde PROGMEM), desde una targeta SD (archivos WAVE y MP3), retransmitiremos una emisora de radio en directo y por último realizaremos un analizador de espectro con un micrófono I2S.
 
 ***
 ## Reproducción desde memoria interna (Archivo aac desde PROGMEM)
@@ -44,6 +44,50 @@ void loop(){
   }
 }
 ```
+###  reproducir un archivo WAVE en ESP32 desde una tarjeta SD externa
+
+El siguiente código configura la ESP32 para reproducir un archivo de audio en formato WAVE almacenado en una tarjeta SD. Se utilizan los pines GPIO especificados para la comunicación con la tarjeta SD y la salida de audio mediante el protocolo I2S. El bucle principal del programa se encarga de reproducir continuamente el archivo de audio especificado.
+
+```ino
+//Bbibliotecas:
+#include<Arduino.h>
+#include "Audio.h"
+#include "SD.h"//biblioteca para acceder a la tarjeta SD.
+#include "FS.h"//biblioteca para acceder al sistema de archivos.
+
+//Definición de Pines
+// Digital I/O used
+#define SD_CS         19//5
+#define SPI_MOSI      23
+#define SPI_MISO      5//19
+#define SPI_SCK       18
+#define I2S_DOUT      25
+#define I2S_BCLK      27
+#define I2S_LRC       26
+
+Audio audio;// Crea un objeto de tipo Audio para reproducir audio en la ESP32
+
+void setup(){
+    pinMode(SD_CS, OUTPUT);//Configura el pin SD_CS como salida.
+    digitalWrite(SD_CS, HIGH);// Establece el nivel lógico alto en el pin SD_CS, desactivando la tarjeta SD.
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);// Inicializa la comunicación SPI con los pines definidos
+    Serial.begin(115200);
+    SD.begin(SD_CS);//Inicializa la tarjeta SD
+    audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);//Configura los pines GPIO para la salida de audio utilizando el protocolo I2S.
+    audio.setVolume(16); // 0...21//Establece el volumen de reproducción del audio en 12 (rango de 0 a 21).
+    audio.connecttoFS(SD, "001.wav");//Conecta el objeto audio al sistema de archivos de la tarjeta SD y especifica el nombre del archivo de audio a reproducir.
+    //Si quisiéramos reproducir un archivo MP3 seria de la siguinete forma: audio.connecttoFS(SD, "002.mp3");
+}
+
+void loop(){
+    audio.loop();//Llama al bucle de reproducción de audio. Esta función se encarga de leer y reproducir el archivo de audio.
+}
+
+```
+
+
+
+
 
 
 
