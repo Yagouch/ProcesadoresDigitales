@@ -44,7 +44,7 @@ void loop(){
   }
 }
 ```
-###  reproducir un archivo WAVE en ESP32 desde una tarjeta SD externa
+###  Reproducción de un archivo WAVE en ESP32 desde una tarjeta SD externa
 
 El siguiente código configura la ESP32 para reproducir un archivo de audio en formato WAVE almacenado en una tarjeta SD. Se utilizan los pines GPIO especificados para la comunicación con la tarjeta SD y la salida de audio mediante el protocolo I2S. El bucle principal del programa se encarga de reproducir continuamente el archivo de audio especificado.
 
@@ -81,6 +81,76 @@ void setup(){
 
 void loop(){
     audio.loop();//Llama al bucle de reproducción de audio. Esta función se encarga de leer y reproducir el archivo de audio.
+}
+
+```
+
+### Reproducción de audio utilizando conexión WiFi y una tarjeta SD (retransmisión en directo de una radio).
+
+El siguiente código configura la ESP32 para reproducir audio utilizando una conexión WiFi y una tarjeta SD. Se establece la conexión WiFi utilizando las credenciales proporcionadas y se conecta el objeto audio a un flujo de audio en línea mediante una URL específica. El bucle principal del programa se encarga de reproducir continuamente el flujo de audio y permite cambiar la URL de reproducción a través del puerto serie.
+
+
+```ino
+
+//Bibliotecas:
+#include "Arduino.h"
+#include "WiFiMulti.h"//biblioteca para la gestión de conexiones WiFi múltiples.
+#include "Audio.h"
+#include "SPI.h"
+#include "SD.h"
+#include "FS.h"
+
+//Definición de pines:
+// Digital I/O used
+#define SD_CS          5
+#define SPI_MOSI      23
+#define SPI_MISO      19
+#define SPI_SCK       18
+#define I2S_DOUT      25
+#define I2S_BCLK      27
+#define I2S_LRC       26
+
+//Declaración de objetos:
+Audio audio;
+WiFiMulti wifiMulti;// Crea un objeto de tipo WiFiMulti para gestionar múltiples conexiones WiFi
+String ssid =     "MOVISTAR_D84E";
+String password = ";9o2a3ei5RY#!:";
+
+
+void setup() {
+    pinMode(SD_CS, OUTPUT);//: Configura el pin SD_CS como salida.
+    digitalWrite(SD_CS, HIGH);//Establece el nivel lógico alto en el pin SD_CS, desactivando la tarjeta SD.
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);//Inicializa la comunicación SPI con los pines
+    SPI.setFrequency(1000000);//Establece la frecuencia de la comunicación SPI a 1 MHz.
+    Serial.begin(115200);
+    SD.begin(SD_CS);
+    WiFi.mode(WIFI_STA);//Configura el modo de la conexión WiFi como estación (cliente).
+    wifiMulti.addAP(ssid.c_str(), password.c_str());//Agrega una red WiFi a la lista de conexiones múltiples con el SSID y la contraseña especificados.
+    wifiMulti.run();//Inicia la conexión WiFi utilizando las credenciales proporcionadas.
+    if(WiFi.status() != WL_CONNECTED){//Verifica si la conexión WiFi se estableció correctamente o no.
+        WiFi.disconnect(true);
+        wifiMulti.run();
+    }
+    audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
+    audio.setVolume(12);//Establece el volumen de reproducción del audio en 12 (rango de 0 a 21).
+
+//    audio.connecttohost("http://www.wdr.de/wdrlive/media/einslive.m3u");
+//    audio.connecttohost("http://somafm.com/wma128/missioncontrol.asx"); //  asx
+//    audio.connecttohost("http://mp3.ffh.de/radioffh/hqlivestream.aac"); //  128k aac
+//    audio.connecttohost("http://mp3.ffh.de/radioffh/hqlivestream.mp3"); //  128k mp3
+      audio.connecttohost("http://nodo01-cloud01.streaming-pro.com:8000/flaixfm.mp3");//Conecta el objeto audio a un flujo de audio en línea utilizando la URL proporcionada.
+}
+
+void loop()
+{
+    audio.loop();
+    if(Serial.available()){ // put streamURL in serial monitor
+        audio.stopSong();//Detiene la reproducción actual si se reciben nuevos datos en el puerto serie.
+        String r=Serial.readString(); r.trim();//Lee la cadena de caracteres recibida en el puerto serie y elimina los espacios en blanco.
+        if(r.length()>5) audio.connecttohost(r.c_str());
+        //Verifica si la cadena de caracteres recibida tiene una longitud mayor a 5 y, en ese caso, conecta el objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada.
+        log_i("free heap=%i", ESP.getFreeHeap());// Imprime en el monitor serie la cantidad de memoria libre disponible.
+    }
 }
 
 ```
