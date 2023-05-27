@@ -13,7 +13,8 @@ Si el generador de audio se detiene, se muestra un mensaje y se espera un segund
 La siguiente imagen muestra el cableado entre el ESP32, la placa de conexión de
 audio MAX98357 I2S y el altavoz:
 
-![imatge](images/IMG-3975.JPG)
+<img src="![imatge](images/IMG-3975.JPG)" alt="Texto alternativo" width="300" height="200">
+
 
 ```ino
 //Bibliotecas
