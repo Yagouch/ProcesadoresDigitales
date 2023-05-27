@@ -1,8 +1,7 @@
 # PRACTICA 7 - I2S  
 ## Yago Carballo Barroso y Ramon Llobet Duch
 En esta práctica vamos a trabajar con el protocolo de comunicación I2S para la ESP32, el cual se usa para transferir señales de sonido digitales.
-Así pues, reproduciremos música des de la memoria interna (Archivo aac desde PROGMEM), desde una targeta SD (archivos WAVE y MP3), retransmitiremos una emisora de radio en directo y por último realizaremos un analizador de espectro con un micrófono I2S.
-
+Así pues, reproduciremos música des de la memoria interna (Archivo aac desde PROGMEM), desde una targeta SD (archivos WAVE y MP3) y retransmitiremos una emisora de radio en directo.
 ***
 ## Reproducción desde memoria interna (Archivo aac desde PROGMEM)
 El siguiente código configura la ESP32 para generar sonido utilizando un archivo de audio en formato AAC. 
