@@ -15,6 +15,11 @@ audio MAX98357 I2S y el altavoz:
 
 ![imatge](images/IMG-3975.JPG)
 
+<img src="images/IMG-3975.JPG" alt="Imagen ESP32,placa de conexión de
+audio MAX98357 I2S y altavoz" width="200" height="150">
+
+
+
 
 ```ino
 //Bibliotecas
