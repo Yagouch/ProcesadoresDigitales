@@ -17,9 +17,6 @@ audio MAX98357 I2S y el altavoz:
 <img src="images/IMG-3975.JPG" alt="Imagen ESP32,placa de conexión de
 audio MAX98357 I2S y altavoz" width="600" height="450">
 
-
-
-
 ```ino
 //Bibliotecas
 #include<Arduino.h>//biblioteca principal de Arduino para la placa ESP32
@@ -54,6 +51,10 @@ void loop(){
   }
 }
 ```
+
+<img src="images/IMG-3978.mov" alt="Vídeo demostrativo reproducción desde memoria interna" width="600" height="450">
+
+
 ###  Reproducción de un archivo WAVE en ESP32 desde una tarjeta SD externa
 
 El siguiente código configura la ESP32 para reproducir un archivo de audio en formato WAVE almacenado en una tarjeta SD. Se utilizan los pines GPIO especificados para la comunicación con la tarjeta SD y la salida de audio mediante el protocolo I2S. El bucle principal del programa se encarga de reproducir continuamente el archivo de audio especificado.
