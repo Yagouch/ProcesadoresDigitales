@@ -212,6 +212,8 @@ void loop()
 
 ```
 
+<img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
+
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
@@ -237,11 +239,6 @@ flowchart TD;
     S --> |Sí| T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
   
 ```
-
-
-
-
-<img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
 
 
