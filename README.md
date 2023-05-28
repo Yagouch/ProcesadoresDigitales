@@ -122,6 +122,24 @@ void loop(){
 
 <img src="images/IMG-3980.mov" alt="Vídeo demostrativo reproducción desde la SD con archivo WAVE/MP3" width="600" height="450">
 
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[Comunicación inicial];
+    B --> C[Configurar pin SD_CS como salida];
+    C --> D[Establecer nivel lógico alto en pin SD_CS];
+    D --> E[Inicializar comunicación SPI con los pines definidos];
+    E --> F[Inicializar comunicación serie];
+    F --> G[Inicializar tarjeta SD];
+    G --> H[Configurar pines GPIO para salida de audio I2S];
+    H --> I[Establecer volumen de reproducción de audio];
+    I --> J[Conectar objeto audio al sistema de archivos de la tarjeta SD y especificar archivo de audio a reproducir];
+    
+    B --> J[Bucle principal];
+    J --> K[Ejecutar bucle de reproducción de audio ];
+    K --> L[Leer y reproducir archivo de audio];
+  
+```
 
 
 ### Reproducción de audio utilizando conexión WiFi y una tarjeta SD (retransmisión en directo de una radio).
