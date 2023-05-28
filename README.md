@@ -216,24 +216,7 @@ void loop()
 
 
 
-### Diagrama de flujo
-```mermaid
-flowchart TD;
-    A[Inicio] --> B[Comunicación inicial];
-    B --> C[Configurar pin SD_CS como salida];
-    C --> D[Establecer nivel lógico alto en pin SD_CS];
-    D --> E[Inicializar comunicación SPI con los pines definidos];
-    E --> F[Inicializar comunicación serie];
-    F --> G[Inicializar tarjeta SD];
-    G --> H[Configurar pines GPIO para salida de audio I2S];
-    H --> I[Establecer volumen de reproducción de audio];
-    I --> J[Conectar objeto audio al sistema de archivos de la tarjeta SD y especificar archivo de audio a reproducir];
-    
-    A --> K[Bucle principal];
-    K --> L[Ejecutar bucle de reproducción de audio ];
-    L --> M[Leer y reproducir archivo de audio];
-  
-```
+
 
 ### Diagrama de flujo
 ```mermaid
@@ -250,6 +233,14 @@ flowchart TD;
     J --> K[Iniciar conexión WiFi utilizando las credenciales proporcionadas];
     K --> L[Verificar si la conexión WiFi se estableció correctamente];
     L --> |Sí| M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
+
+    A --> M[Bucle principal];
+    M --> N[Ejecutar bucle de reproducción de audio];
+    N --> O[Verificar si hay datos disponibles en el puerto serie];
+    O --> |Sí| P[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
+    P --> Q[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
+    Q --> R[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
+    R --> |Sí| S[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
 
     
     ```
