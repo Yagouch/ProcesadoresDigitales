@@ -251,6 +251,23 @@ void loop() {
   display.display();
 }
 ```
+
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[setup];
+    B --> C[Iniciar el puerto serial];
+    C --> D[Iniciar pantalla OLEDe];
+    
+    A -->E[loop];
+    E -->F[Comprobar si es necesario actualizar el tiempo];
+    F -->G[Convertir millis() a días, horas, minutos y segundos];
+    G -->H[Componer cadena con información formateada del tiemp];
+    H -->I[Limpiar el buffer de pantalla];
+    I -->J[Impresiones en la pantalla];
+  
+```
+
 ***
 ### Salida del código del DISPLAY OLED
 ![SS_display_OLED](images/SS_Display_contador_output.png)
