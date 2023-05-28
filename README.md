@@ -52,7 +52,7 @@ void loop(){
 }
 ```
 
-<img src="images/PracticaI2S_aac.png" alt="Ejecución código de la reproducción interna aac" width="800" height="550">
+<img src="images/PracticaI2S_aac.png" alt="Ejecución código de la reproducción interna aac" width="900" height="550">
 
 <img src="images/IMG-3978.mov" alt="Vídeo demostrativo reproducción desde memoria interna" width="600" height="450">
 
@@ -99,7 +99,7 @@ void loop(){
 ```
 
 
-<img src="images/PracticaI2S_SD.png" alt="Ejecución código de la reproducción de archivo WAVE a través de la SD" width="800" height="550">
+<img src="images/PracticaI2S_SD.png" alt="Ejecución código de la reproducción de archivo WAVE a través de la SD" width="900" height="550">
 
 <img src="images/IMG-3980.mov" alt="Vídeo demostrativo reproducción desde la SD con archivo WAVE/MP3" width="600" height="450">
 
@@ -175,7 +175,7 @@ void loop()
 
 ```
 
-<img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="800" height="550">
+<img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
 
 
