@@ -214,31 +214,7 @@ void loop()
 
 <img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
-### Diagrama de flujo
-```mermaid
-flowchart TD;
-st=>start: Inicio
-op1=>operation: Importar bibliotecas
-op2=>operation: Definir pines
-op3=>operation: Declarar objetos
-op4=>operation: Configurar pines y conexiones
-op5=>operation: Establecer volumen de reproducción
-op6=>operation: Conectar a flujo de audio en línea
-cond1=>condition: ¿Hay datos disponibles en el puerto serie?
-op7=>operation: Detener reproducción actual
-op8=>operation: Leer y procesar cadena de caracteres
-cond2=>condition: ¿La longitud de la cadena es mayor a 5?
-op9=>operation: Conectar a nuevo flujo de audio en línea
-op10=>operation: Imprimir cantidad de memoria libre
-e=>end: Fin
 
-st->op1->op2->op3->op4->op5->op6->cond1
-cond1(yes)->op7->op8->cond2
-cond1(no)->op10->op6
-cond2(yes)->op9->op10->op6
-cond2(no)->op10->cond1
-op10->e
-```
 
 
 
