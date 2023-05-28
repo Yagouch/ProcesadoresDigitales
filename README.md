@@ -214,6 +214,27 @@ void loop()
 
 <img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
+
+
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[Comunicación inicial];
+    B --> C[Configurar pin SD_CS como salida];
+    C --> D[Establecer nivel lógico alto en pin SD_CS];
+    D --> E[Inicializar comunicación SPI con los pines definidos];
+    E --> F[Inicializar comunicación serie];
+    F --> G[Inicializar tarjeta SD];
+    G --> H[Configurar pines GPIO para salida de audio I2S];
+    H --> I[Establecer volumen de reproducción de audio];
+    I --> J[Conectar objeto audio al sistema de archivos de la tarjeta SD y especificar archivo de audio a reproducir];
+    
+    A --> K[Bucle principal];
+    K --> L[Ejecutar bucle de reproducción de audio ];
+    L --> M[Leer y reproducir archivo de audio];
+  
+```
+
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
