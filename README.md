@@ -135,9 +135,9 @@ flowchart TD;
     H --> I[Establecer volumen de reproducción de audio];
     I --> J[Conectar objeto audio al sistema de archivos de la tarjeta SD y especificar archivo de audio a reproducir];
     
-    A --> J[Bucle principal];
-    J --> K[Ejecutar bucle de reproducción de audio ];
-    K --> L[Leer y reproducir archivo de audio];
+    A --> K[Bucle principal];
+    K --> L[Ejecutar bucle de reproducción de audio ];
+    L --> M[Leer y reproducir archivo de audio];
   
 ```
 
