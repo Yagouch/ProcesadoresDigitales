@@ -221,7 +221,7 @@ void loop()
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
-    A[Inicio] --> B[Comunicación inicial];
+   A[Inicio] --> B[Comunicación inicial];
     B --> C[Configurar pin SD_CS como salida];
     C --> D[Establecer nivel lógico alto en pin SD_CS, desactivando la tarjeta SD];
     D --> E[Inicializar comunicación SPI con los pines definidos];
@@ -232,16 +232,15 @@ flowchart TD;
     I --> J[Agregar red WiFi a la lista de conexiones múltiples con SSID y contraseña especificados];
     J --> K[Iniciar conexión WiFi utilizando las credenciales proporcionadas];
     K --> L[Verificar si la conexión WiFi se estableció correctamente];
-    L --> |Sí| M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
+    L --> M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
 
-    A --> M[Bucle principal];
-    M --> N[Ejecutar bucle de reproducción de audio];
-    N --> O[Verificar si hay datos disponibles en el puerto serie];
-    O --> |Sí| P[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
-    P --> Q[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
-    Q --> R[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
-    R --> |Sí| S[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
-
+    A --> N[Bucle principal];
+    N --> O[Ejecutar bucle de reproducción de audio];
+    O --> P[Verificar si hay datos disponibles en el puerto serie];
+    P --> Q[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
+    Q --> R[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
+    R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
+    S --> T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
     
     ```
   
