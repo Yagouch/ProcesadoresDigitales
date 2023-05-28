@@ -64,6 +64,29 @@ void loop() {
 }
 ```
 
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[setup];
+    B --> C[Iniciar comunicación I2C];
+    C --> D[Iniciar comunicación serie];
+    D --> E[Mostrar mensaje de encabezado en el monitor serial];
+    
+    B -->F[loop];
+    F -->G[Realizar escaneo de dispositivos I2C];
+    G -->H[Declararación de variables: error, address, nDevices];
+    H -->I[Iniciar transmisión a la dirección actual];
+    I -->J[Verificar si hay un error en la transmisión];
+    J -->|Si no hay errores| K[Mostrar mensaje indicando dispositivo encontrado en la dirección actual];
+    K -->L[Incrementar nDevices];
+    J -->|Si hay un error de ACK| M[Mostrar mensaje de error en la dirección actual];
+    M -->N[Verificar si no se encontraron dispositivos];
+    N -->|Si no se encuentran dispositivos| O[Mostrar mensaje indicando que no se encontraron dispositivos];
+    N -->|Si se encontraron dispositivos| P[Mostrar cantidad total de dispositivos encontrados];
+    P -->Q[Esperar 5 segundos antes de iniciar otro escaneo];
+  
+```
+
 ***
 
 ### Salida de cógido del Escáner
