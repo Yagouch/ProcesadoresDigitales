@@ -72,7 +72,7 @@ flowchart TD;
     C --> D[Iniciar comunicación serie];
     D --> E[Mostrar mensaje de encabezado en el monitor serial];
     
-    B -->F[loop];
+    A -->F[loop];
     F -->G[Realizar escaneo de dispositivos I2C];
     G -->H[Declararación de variables: error, address, nDevices];
     H -->I[Iniciar transmisión a la dirección actual];
