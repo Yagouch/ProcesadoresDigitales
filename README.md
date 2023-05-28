@@ -261,7 +261,7 @@ flowchart TD;
     
     A --> E[loop];
     E --> F[Comprobar si es necesario actualizar el tiempo];
-    F --> G[Convertir millis() a días, horas, minutos y segundos];
+    F --> G["Convertir millis() a días, horas, minutos y segundos"];
     G --> H[Componer cadena con información formateada del tiemp];
     H --> I[Limpiar el buffer de pantalla];
     I --> J[Impresiones en la pantalla];
