@@ -214,34 +214,55 @@ void loop()
 
 <img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
+Inicio
+├─ Importar bibliotecas
+│  ├─ Arduino.h
+│  ├─ WiFiMulti.h
+│  ├─ Audio.h
+│  ├─ SPI.h
+│  ├─ SD.h
+│  └─ FS.h
+│
+├─ Definir pines
+│  ├─ SD_CS = 5
+│  ├─ SPI_MOSI = 23
+│  ├─ SPI_MISO = 19
+│  ├─ SPI_SCK = 18
+│  ├─ I2S_DOUT = 25
+│  ├─ I2S_BCLK = 27
+│  └─ I2S_LRC = 26
+│
+├─ Declarar objetos
+│  ├─ audio (Audio)
+│  └─ wifiMulti (WiFiMulti)
+│
+├─ Configurar
+│  ├─ Configurar pin SD_CS como salida
+│  ├─ Establecer nivel lógico alto en pin SD_CS
+│  ├─ Inicializar comunicación SPI con pines definidos
+│  ├─ Establecer frecuencia de comunicación SPI a 1 MHz
+│  ├─ Inicializar comunicación serial a 115200 baudios
+│  ├─ Inicializar tarjeta SD
+│  ├─ Configurar modo de conexión WiFi como estación (cliente)
+│  ├─ Agregar red WiFi a lista de conexiones múltiples
+│  ├─ Iniciar conexión WiFi
+│  │  └─ Si conexión no se estableció correctamente, desconectar y volver a intentar
+│  ├─ Configurar pines GPIO para salida de audio utilizando protocolo I2S
+│  ├─ Establecer volumen de reproducción de audio en 12
+│  └─ Conectar objeto audio a flujo de audio en línea utilizando URL proporcionada
+│
+└─ Bucle principal
+   ├─ Reproducir audio
+   ├─ Si hay datos disponibles en el puerto serial
+   │  ├─ Detener reproducción actual
+   │  ├─ Leer cadena de caracteres del puerto serial y eliminar espacios en blanco
+   │  ├─ Si la longitud de la cadena es mayor a 5
+   │  │  └─ Conectar objeto audio a nuevo flujo de audio en línea utilizando URL proporcionada
+   │  └─ Imprimir cantidad de memoria libre disponible en el monitor serie
+   └─ Regresar al inicio del bucle principal
 
-/*
-### Diagrama de flujo
-```mermaid
-flowchart TD;
-   A[Inicio] --> B[Comunicación inicial];
-    B --> C[Configurar pin SD_CS como salida];
-    C --> D[Establecer nivel lógico alto en pin SD_CS, desactivando la tarjeta SD];
-    D --> E[Inicializar comunicación SPI con los pines definidos];
-    E --> F[Establecer frecuencia de comunicación SPI a 1 MHz];
-    F --> G[Inicializar comunicación serie];
-    G --> H[Inicializar tarjeta SD];
-    H --> I[Configurar modo de conexión WiFi como estación (cliente)];
-    I --> J[Agregar red WiFi a la lista de conexiones múltiples con SSID y contraseña especificados];
-    J --> K[Iniciar conexión WiFi utilizando las credenciales proporcionadas];
-    K --> L[Verificar si la conexión WiFi se estableció correctamente];
-    L --> M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
 
-    A --> N[Bucle principal];
-    N --> O[Ejecutar bucle de reproducción de audio];
-    O --> P[Verificar si hay datos disponibles en el puerto serie];
-    P --> Q[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
-    Q --> R[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
-    R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
-    S --> T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
-    
-    ```
-*/
+
 
 
 
