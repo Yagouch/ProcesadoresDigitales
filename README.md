@@ -96,6 +96,10 @@ void loop(){
 
 ```
 
+<img src="images/IMG-3980.mov" alt="Vídeo demostrativo reproducción desde la SD con archivo WAVE/MP3" width="600" height="450">
+
+
+
 ### Reproducción de audio utilizando conexión WiFi y una tarjeta SD (retransmisión en directo de una radio).
 
 El siguiente código configura la ESP32 para reproducir audio utilizando una conexión WiFi y una tarjeta SD. Se establece la conexión WiFi utilizando las credenciales proporcionadas y se conecta el objeto audio a un flujo de audio en línea mediante una URL específica. El bucle principal del programa se encarga de reproducir continuamente el flujo de audio y permite cambiar la URL de reproducción a través del puerto serie.
