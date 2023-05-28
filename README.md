@@ -56,6 +56,25 @@ void loop(){
 
 <img src="images/IMG-3978.mov" alt="Vídeo demostrativo reproducción desde memoria interna" width="600" height="450">
 
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[Comunicación inicial];
+    B --> C[Iniciar comunicación serial];
+    C --> D[Creación instancias];
+    D --> E[Establecer nivel de ganancia de salida de audio];
+    E --> F[Configurar pines GPIO para salida de audio I2S];
+    F --> G[Inicializar generador de audio AAC];
+    
+    B -->H[Bucle principal];
+    H --> I[Verificar si el generador de audio AAC está en funcionamiento];
+    I -->|Sí| J[Ejecutar bucle de generación de audio AAC];
+    I -->|No| K[Detener generación de audio AAC];
+    K --> L[Imprimir mensaje en el monitor serie];
+    L -->M[Esperar un segundo antes de reiniciar el bucle];
+  
+```
+
 
 ###  Reproducción de un archivo WAVE en ESP32 desde una tarjeta SD externa
 
