@@ -238,7 +238,6 @@ flowchart TD;
     R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
     S --> |Sí| T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
   
-```
 
 
 
