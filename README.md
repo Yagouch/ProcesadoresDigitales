@@ -214,52 +214,32 @@ void loop()
 
 <img src="images/PracticaI2S_WebRadio.png" alt="Ejecución código de la WEB/RADIO" width="900" height="550">
 
-Inicio
-├─ Importar bibliotecas
-│  ├─ Arduino.h
-│  ├─ WiFiMulti.h
-│  ├─ Audio.h
-│  ├─ SPI.h
-│  ├─ SD.h
-│  └─ FS.h
-│
-├─ Definir pines
-│  ├─ SD_CS = 5
-│  ├─ SPI_MOSI = 23
-│  ├─ SPI_MISO = 19
-│  ├─ SPI_SCK = 18
-│  ├─ I2S_DOUT = 25
-│  ├─ I2S_BCLK = 27
-│  └─ I2S_LRC = 26
-│
-├─ Declarar objetos
-│  ├─ audio (Audio)
-│  └─ wifiMulti (WiFiMulti)
-│
-├─ Configurar
-│  ├─ Configurar pin SD_CS como salida
-│  ├─ Establecer nivel lógico alto en pin SD_CS
-│  ├─ Inicializar comunicación SPI con pines definidos
-│  ├─ Establecer frecuencia de comunicación SPI a 1 MHz
-│  ├─ Inicializar comunicación serial a 115200 baudios
-│  ├─ Inicializar tarjeta SD
-│  ├─ Configurar modo de conexión WiFi como estación (cliente)
-│  ├─ Agregar red WiFi a lista de conexiones múltiples
-│  ├─ Iniciar conexión WiFi
-│  │  └─ Si conexión no se estableció correctamente, desconectar y volver a intentar
-│  ├─ Configurar pines GPIO para salida de audio utilizando protocolo I2S
-│  ├─ Establecer volumen de reproducción de audio en 12
-│  └─ Conectar objeto audio a flujo de audio en línea utilizando URL proporcionada
-│
-└─ Bucle principal
-   ├─ Reproducir audio
-   ├─ Si hay datos disponibles en el puerto serial
-   │  ├─ Detener reproducción actual
-   │  ├─ Leer cadena de caracteres del puerto serial y eliminar espacios en blanco
-   │  ├─ Si la longitud de la cadena es mayor a 5
-   │  │  └─ Conectar objeto audio a nuevo flujo de audio en línea utilizando URL proporcionada
-   │  └─ Imprimir cantidad de memoria libre disponible en el monitor serie
-   └─ Regresar al inicio del bucle principal
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+st=>start: Inicio
+op1=>operation: Importar bibliotecas
+op2=>operation: Definir pines
+op3=>operation: Declarar objetos
+op4=>operation: Configurar pines y conexiones
+op5=>operation: Establecer volumen de reproducción
+op6=>operation: Conectar a flujo de audio en línea
+cond1=>condition: ¿Hay datos disponibles en el puerto serie?
+op7=>operation: Detener reproducción actual
+op8=>operation: Leer y procesar cadena de caracteres
+cond2=>condition: ¿La longitud de la cadena es mayor a 5?
+op9=>operation: Conectar a nuevo flujo de audio en línea
+op10=>operation: Imprimir cantidad de memoria libre
+e=>end: Fin
+
+st->op1->op2->op3->op4->op5->op6->cond1
+cond1(yes)->op7->op8->cond2
+cond1(no)->op10->op6
+cond2(yes)->op9->op10->op6
+cond2(no)->op10->cond1
+op10->e
+```
+
 
 
 
