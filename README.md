@@ -230,13 +230,6 @@ flowchart TD;
     K --> L[Verificar si la conexión WiFi se estableció correctamente];
     L --> |Sí| M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
 
-    A --> N[Bucle principal];
-    N --> O[Ejecutar bucle de reproducción de audio];
-    O --> P[Verificar si hay datos disponibles en el puerto serie];
-    P --> |Sí| Q[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
-    Q --> R[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
-    R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
-    S --> |Sí| T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
     
     ```
   
