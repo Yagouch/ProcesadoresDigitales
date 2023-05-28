@@ -75,6 +75,32 @@ flowchart TD;
   
 ```
 
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+   A[Inicio] --> B[Comunicación inicial];
+    B --> C[Configurar pin SD_CS como salida];
+    C --> D[Establecer nivel lógico alto en pin SD_CS, desactivando la tarjeta SD];
+    D --> E[Inicializar comunicación SPI con los pines definidos];
+    E --> F[Establecer frecuencia de comunicación SPI a 1 MHz];
+    F --> G[Inicializar comunicación serie];
+    G --> H[Inicializar tarjeta SD];
+    H --> I[Configurar modo de conexión WiFi como estación (cliente)];
+    I --> J[Agregar red WiFi a la lista de conexiones múltiples con SSID y contraseña especificados];
+    J --> K[Iniciar conexión WiFi utilizando las credenciales proporcionadas];
+    K --> L[Verificar si la conexión WiFi se estableció correctamente];
+    L --> M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
+
+    A --> N[Bucle principal];
+    N --> O[Ejecutar bucle de reproducción de audio];
+    O --> P[Verificar si hay datos disponibles en el puerto serie];
+    P --> Q[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
+    Q --> R[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
+    R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
+    S --> T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
+    
+    ```
+
 
 ###  Reproducción de un archivo WAVE en ESP32 desde una tarjeta SD externa
 
@@ -218,31 +244,7 @@ void loop()
 
 
 
-### Diagrama de flujo
-```mermaid
-flowchart TD;
-   A[Inicio] --> B[Comunicación inicial];
-    B --> C[Configurar pin SD_CS como salida];
-    C --> D[Establecer nivel lógico alto en pin SD_CS, desactivando la tarjeta SD];
-    D --> E[Inicializar comunicación SPI con los pines definidos];
-    E --> F[Establecer frecuencia de comunicación SPI a 1 MHz];
-    F --> G[Inicializar comunicación serie];
-    G --> H[Inicializar tarjeta SD];
-    H --> I[Configurar modo de conexión WiFi como estación (cliente)];
-    I --> J[Agregar red WiFi a la lista de conexiones múltiples con SSID y contraseña especificados];
-    J --> K[Iniciar conexión WiFi utilizando las credenciales proporcionadas];
-    K --> L[Verificar si la conexión WiFi se estableció correctamente];
-    L --> M[Desconectar WiFi y volver a ejecutar la conexión WiFi si no se estableció correctamente];
 
-    A --> N[Bucle principal];
-    N --> O[Ejecutar bucle de reproducción de audio];
-    O --> P[Verificar si hay datos disponibles en el puerto serie];
-    P --> Q[Detener reproducción actual si se reciben nuevos datos en el puerto serie];
-    Q --> R[Leer cadena de caracteres recibida en el puerto serie y eliminar espacios en blanco];
-    R --> S[Verificar si la cadena de caracteres recibida tiene una longitud mayor a 5];
-    S --> T[Conectar objeto audio a un nuevo flujo de audio en línea utilizando la URL proporcionada];
-    
-    ```
   
 
 
