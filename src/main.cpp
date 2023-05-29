@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <Arduino.h>//Incluye las definiciones básicas de Arduino para la placa ESP32.
 #include "Audio.h"//Biblioteca para el manejo de reproducción de audio.
 #include "SD.h"// Biblioteca para el manejo de la tarjeta SD.
 #include "FS.h"//Biblioteca para el manejo del sistema de archivos.
