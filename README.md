@@ -181,6 +181,9 @@ IP address:
 ***
 ### Resultado Wifi-STA
 ![Pagina web](images/SS_STA_web.png)
+
+![IMG-2730](https://github.com/Yagouch/Practica4/assets/126197495/5b4a2e2c-4141-4510-9eda-2a55170e3529)
+
 ***
 ### Diagrama de flujo Wifi-STA
 ```mermaid
