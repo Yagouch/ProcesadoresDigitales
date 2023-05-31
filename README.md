@@ -272,3 +272,10 @@ flowchart TD;
 ### Salida del código del DISPLAY OLED
 ![SS_display_OLED](images/SS_Display_contador_output.png)
 ![foto_display_OLED](images/foto_display_OLED.JPG)
+
+
+![IMG-2825](https://github.com/Yagouch/Practica5/assets/126197495/70a88e2f-81d8-4608-92e6-84acb9ec80e0)
+
+
+
+
