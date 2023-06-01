@@ -18,7 +18,7 @@ Finalmente, también hemos utilizado una ***PANTALLA OLED I2C (modelo SSD1306)**
 
 Para poder realizar todas estas acciones hemos utilizado la placa ```ESP32``` y los protocolos  ```I2C``` (inter integrated circuits), ```SPI``` (Serial Peripheral Interface), y ```I2S``` (Integrated Interchip Sound).
 - El ```protocolo I2C``` lo utilizamos para la comunicación con la pantalla OLED. Podremos identificar los dispositivos I2C disponibles en el bus y sus direcciones correspondientes.
-- El ```protocolo SPI``` lo utilizamos para la comunicación con la tarjeta SD mediante la biblioteca ´´´SPI.h´´´ y ´´´SD.h´´´.
+- El ```protocolo SPI``` lo utilizamos para la comunicación con la tarjeta SD mediante la biblioteca ```SPI.h``` y ```SD.h```.
 - El ```protocolo I2S``` lo utilizamos para  la reproducción de audio mediante la biblioteca ```Audio.h```.
 
 
