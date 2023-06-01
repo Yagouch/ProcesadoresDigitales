@@ -99,7 +99,7 @@ audio.loop();
 }
 ```
 ### *2.0*
-Segunda versión del proyecto. He añadido una matriz unidimensional de canciones, y dos botones para mover un index sobre esa matriz, y poder alternar entre canciones.
+Segunda versión del proyecto. Se ha añadido una matriz unidimensional de canciones, y dos botones para mover un index sobre esa matriz, y poder alternar entre canciones.
 ```ino
 #include<Arduino.h>
 
@@ -418,7 +418,7 @@ audio.loop();
 }
 
 ```
-### *4.0*
+### *4.0 (MODIFICAR/CORREGIR)*
 En esta versión del proyecto se crean botones para poder pausar/reanudar las canciones, subir/bajar el voluemen de audio y pasar a la siguiente/anterior canción.
 
 ```ino
