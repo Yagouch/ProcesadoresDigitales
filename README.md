@@ -4,14 +4,18 @@
 Nuestro proyecto se basa en un reproductor de audio MP3 con varias funcionalidades que se van a detallar a continuación.
 
 Como ya hemos dicho, podremos ***REPRODUCIR AUDIO*** (utilizamos la biblioteca ```Audio.h``` para reproducir archivos de audio en la placa ESP32).
+
 Podremos almacenar archivos de música en formato MP3 en una targeta SD y reproducirlos utilizando la función ```playMusic()```. La función utiliza la biblioteca ```SD.h``` para acceder a los archivos en la tarjeta SD y la biblioteca ```FS.h``` para el manejo del sistema de archivos.
+
 Además, también podremos ***CONTROLAR LA REPRODUCCIÓN***. El programa utiliza ```botones``` conectados a pines específicos para controlar la reproducción de audio. 
 Utilizamos ```tres botones```:
 -  El botón ```BUTTON_pin```. Es el botón principal utilizado para pausar y reanudar la reproducción de audio (Play/Pause).
 -  El botón ```BUTTON_volumeUP_pin```. Es el botón utilizado para aumentar el volumen de reproducción.
 -  El botón ```BUTTON_volumeDOWN_pin```. Es el botón utilizado para disminuir el volumen de reproducción.
+
 De esta manera podremos ***AJUSTAR EL VOLUMEN DE AUDIO***.
-También podremos utilizar un ***SERVIDOR WEB Y WIFI***. El programa utiliza la biblioteca ```WiFi.h``` para establecer una conexión WiFi y crear un servidor web utilizando la biblioteca ```ESPAsyncWebServer.h```. Una vez que la conexión WiFi está establecida, podemos acceder al servidor web desde cualquier dispositivo en la misma red. El servidor web muestra una ***PÁGINA WEB CON BOTONES*** para controlar la reproducción de audio y ajustar el volumen. Ésta página web proporciona una interfaz visual para mostrar los géneros de música y las canciones disponibles. Esto permite al usuario seleccionar una canción y controlar la reproducción a través de los botones y acciones definidas en otras rutas del servidor web. Así pues también podremos hacer un ***CAMBIO DE GÉNERO DE MÚSICA A TRAVÉS DE LA PÁGINA WEB***. El programa incluye la función ```changeGenre()``` que se activa cuando se presiona el botón ```Change Genre``` en la página web. 
+También podremos utilizar un ***SERVIDOR WEB Y WIFI***. El programa utiliza la biblioteca ```WiFi.h``` para establecer una conexión WiFi y crear un servidor web utilizando la biblioteca ```ESPAsyncWebServer.h```. Una vez que la conexión WiFi está establecida, podemos acceder al servidor web desde cualquier dispositivo en la misma red. El servidor web muestra una ***PÁGINA WEB CON BOTONES*** para controlar la reproducción de audio y ajustar el volumen. Ésta página web proporciona una interfaz visual para mostrar los géneros de música y las canciones disponibles. Esto permite al usuario seleccionar una canción y controlar la reproducción a través de los botones y acciones definidas en otras rutas del servidor web. Así pues también podremos hacer un ***CAMBIO DE GÉNERO DE MÚSICA A TRAVÉS DE LA PÁGINA WEB***. El programa incluye la función ```changeGenre()``` que se activa cuando se presiona el botón ```Change Genre``` en la página web.
+
 A diferencia del reproductor de audio implementado físicamente, la página web creada tiene dos botones más que permiten ***AVANZAR O RETROCEDER UNA CANCIÓN (EN LA PÁGINA WEB)*** i tres botones más que permiten realizar un  ***FILTRO PASO-BAJO,PASO-ALTO Y PASO-BANDA (EN LA PÁGINA WEB)***.
 Finalmente, también hemos utilizado una ***PANTALLA OLED I2C (modelo SSD1306)*** que nos permitirá ***VISUALIZAR EL VOLUMEN ACTUAL, NOMBRE DE LA CANCIÓN, ESTADO DE REPRODUCCIÓN (PAUSADO/REPRODUCIENDO) Y DURACIÓN DE LA CANCIÓN (TIEMPO DE REPRODUCCIÓN Y TIEMPO TOTAL DE LA CANCIÓN)***. Hemos utilizado la biblioteca ```Adafruit_SSD1306.h``` para controlar la pantalla OLED.
 

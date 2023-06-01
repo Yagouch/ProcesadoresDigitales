@@ -146,10 +146,10 @@ void Init_vector_rock();
 //inicializa un vector de canciones de género rock. Lee el archivo "rock.txt" y extrae los nombres de las canciones. 
 //Luego, utiliza la función URLconverter para convertir cada nombre de canción en una URL válida 
 //y los almacena en el vector songsRock.
-void Init_vector_pop();//similar a la función anterior.
-void Init_protocols();// inicializa la pantalla OLED, el protocolo I2S, el protocolo SPI y la tarjeta SD.
-void Init_WebServer();//configura la conexión WiFi y muestra por la consola la dirección IP asignada al microcontrolador.
-void Server_handle();//establece las distintas rutas y acciones que se manejarán en el servidor web.
+void Init_vector_pop(); //similar a la función anterior.
+void Init_protocols(); //inicializa la pantalla OLED, el protocolo I2S, el protocolo SPI y la tarjeta SD.
+void Init_WebServer(); //configura la conexión WiFi y muestra por la consola la dirección IP asignada al microcontrolador.
+void Server_handle(); //establece las distintas rutas y acciones que se manejarán en el servidor web.
 
 void pantalla(void *parameter);//se encarga de actualizar la pantalla OLED con información relevante, como el volumen, el estado de reproducción y la duración de la canción actual.
 
@@ -179,7 +179,7 @@ void setup()
     server.begin();
 
     // ---------</WEB>----------
-
+    
     pinMode(BUTTON_pin, INPUT_PULLUP); // Configurar el pin del botón como entrada con resistencia pull-up interna
     pinMode(BUTTON_volumeUP_pin, INPUT_PULLUP);
     pinMode(BUTTON_volumeDOWN_pin, INPUT_PULLUP);
@@ -189,16 +189,17 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(BUTTON_volumeDOWN_pin), ISR_volumeDOWN, RISING);//Asigna la interrupción al pin del botón de disminución de volumen.
 
     //Se crea una tarea en segundo plano para controlar la pantalla OLED:
-    xTaskCreatePinnedToCore(
-        pantalla,   /* Función que implementa la tarea. */
-        "pantalla", /* Nombre de la tarea. */
-        2000,       /* Tamaño de la pila de la tarea */
-        NULL,       /* Parámetros de la tarea */
-        1,          /* Prioridad de la tarea */
-        NULL,       /* Referencia a la tarea */
-        0);         /* Núcleo donde se ejecutará la tarea */
+    xTaskCreatePinnedToCore( 
+        pantalla,   // Función que implementa la tarea.
+        "pantalla", // Nombre de la tarea.
+        2000,       // Tamaño de la pila de la tarea
+        NULL,       // Parámetros de la tarea
+        1,          // Prioridad de la tarea
+        NULL,       // Referencia a la tarea
+        0);         // Núcleo donde se ejecutará la tarea
 
     audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);// para conectar al sistema de archivos SD y cargar la primera canción del género actual.
+
 }
 
 void loop()
@@ -421,7 +422,7 @@ void Server_handle()
 void pantalla(void *parameter)//para actualizar la pantalla OLED
 {
     //Muestra el volumen actual, el género de música, el nombre de la canción y el artista. 
-    //También muestra un indicador visual de reproducción (un triángulo lleno o rectángulos) dependiendo del estado de reproducción actual
+    //También muestra un indicador visual de reproducción (un triángulo o rectángulos) dependiendo del estado de reproducción actual
     String temp_cancion;
     String temp_artista;
     display.clearDisplay();
@@ -512,6 +513,7 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
             display.print("de ");
             display.println(temp_artista);
         }
+
         if (audio.isRunning())
         {
             display.fillTriangle(112, 50, 112, 58, 122, 54, SSD1306_WHITE);
@@ -522,14 +524,6 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
             display.fillRect(118, 50, 4, 8, SSD1306_WHITE);
         }
 
-        display.display();
-
-        vTaskDelay(1000);
-    }
-}   }
-                    i++;
-                }
-            }
 
             for (int i = 0; i < temp_cancion.length(); i++)
             {
@@ -554,5 +548,6 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
         display.display();
 
         vTaskDelay(1000);
+        }
     }
 }
