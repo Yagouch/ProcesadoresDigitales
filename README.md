@@ -3,7 +3,7 @@
 
 Nuestro proyecto se basa en un reproductor de audio MP3 con varias funcionalidades que se van a detallar a continuación.
 
-Como ya hemos dicho, podremos **REPRODUCIR AUDIO** (utilizamos la biblioteca ```Audio.h``` para reproducir archivos de audio en la placa ESP32).
+Como ya hemos dicho, podremos ***REPRODUCIR AUDIO*** (utilizamos la biblioteca ```Audio.h``` para reproducir archivos de audio en la placa ESP32).
 Podremos almacenar archivos de música en formato MP3 en una targeta SD y reproducirlos utilizando la función ```playMusic()```. La función utiliza la biblioteca ```SD.h``` para acceder a los archivos en la tarjeta SD y la biblioteca ```FS.h``` para el manejo del sistema de archivos.
 Además, también podremos ***CONTROLAR LA REPRODUCCIÓN***. El programa utiliza ```botones``` conectados a pines específicos para controlar la reproducción de audio. 
 Utilizamos ```tres botones```:
