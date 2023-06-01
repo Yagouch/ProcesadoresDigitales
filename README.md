@@ -12,27 +12,13 @@ Utilizamos ```tres botones```:
 De esta manera podremos ***AJUSTAR EL VOLUMEN DE AUDIO***.
 También podremos utilizar un ***SERVIDOR WEB Y WIFI***. El programa utiliza la biblioteca ```WiFi.h``` para establecer una conexión WiFi y crear un servidor web utilizando la biblioteca ```ESPAsyncWebServer.h```. Una vez que la conexión WiFi está establecida, podemos acceder al servidor web desde cualquier dispositivo en la misma red. El servidor web muestra una ***PÁGINA WEB CON BOTONES*** para controlar la reproducción de audio y ajustar el volumen. Ésta página web proporciona una interfaz visual para mostrar los géneros de música y las canciones disponibles. Esto permite al usuario seleccionar una canción y controlar la reproducción a través de los botones y acciones definidas en otras rutas del servidor web. Así pues también podremos hacer un ***CAMBIO DE GÉNERO DE MÚSICA A TRAVÉS DE LA PÁGINA WEB***. El programa incluye la función ```changeGenre()``` que se activa cuando se presiona el botón ```Change Genre``` en la página web. 
 A diferencia del reproductor de audio implementado físicamente, la página web creada tiene dos botones más que permiten ***AVANZAR O RETROCEDER UNA CANCIÓN (EN LA PÁGINA WEB)*** i tres botones más que permiten realizar un  ***FILTRO PASO-BAJO,PASO-ALTO Y PASO-BANDA (EN LA PÁGINA WEB)***.
+Finalmente, también hemos utilizado una ***PANTALLA OLED I2C (modelo SSD1306)*** que nos permitirá ***VISUALIZAR EL VOLUMEN ACTUAL, NOMBRE DE LA CANCIÓN, ESTADO DE REPRODUCCIÓN (PAUSADO/REPRODUCIENDO) Y DURACIÓN DE LA CANCIÓN (TIEMPO DE REPRODUCCIÓN Y TIEMPO TOTAL DE LA CANCIÓN)***. Hemos utilizado la biblioteca ```Adafruit_SSD1306.h``` para controlar la pantalla OLED.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Para ello hemos utilizado la placa ESP32 y los protocolos  I2C (inter integrated circuits), SPI (Serial Peripheral Interface), para la comunicació
-
-
-
-
-
+Para poder realizar todas estas acciones hemos utilizado la placa ```ESP32``` y los protocolos  ```I2C``` (inter integrated circuits), ```SPI``` (Serial Peripheral Interface), y ```I2S``` (Integrated Interchip Sound).
+- El ```protocolo I2C``` lo utilizamos para la comunicación con la pantalla OLED. Podremos identificar los dispositivos I2C disponibles en el bus y sus direcciones correspondientes.
+- El ```protocolo SPI``` lo utilizamos para la comunicación con la tarjeta SD mediante la biblioteca ´´´SPI.h´´´ y ´´´SD.h´´´.
+- El ```protocolo I2S``` lo utilizamos para  la reproducción de audio mediante la biblioteca ```Audio.h```.
 
 
 ### **Versiones**
