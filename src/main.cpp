@@ -60,7 +60,7 @@ vector<String> GenreNames;
 //Para controlar la reproducción de canciones y géneros:
 int SongIndex = 0;
 int GenreIndex = 0;
-int Volume = 6;//para almacenar el volumen de reproducción.
+int Volume = 4;//para almacenar el volumen de reproducción.
 
 // Ticker para el cambio de canción automático
 Ticker ticker;
@@ -279,6 +279,10 @@ void Init_protocols()
         while (true)
             ;
     }
+    else
+    {
+        Serial.println("Pantalla OLED iniciada");
+    }
 
     //---------I2S y SPI----------
     pinMode(SD_CS, OUTPUT);
@@ -311,16 +315,28 @@ void Server_handle()
     //Otras rutas como "/toggle", "/next", "/previous", "/soundUp", "/soundDown" y otras, se encargan de realizar acciones específicas como pausar/reanudar la reproducción, cambiar de canción, ajustar el volumen, etc.
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
+    {
     html += "<div class=\"album-list\">";
     html += "<div class=\"album\">";
     html += "<img src=\"https://m.media-amazon.com/images/I/919JyJJiTtL._SL1500_.jpg\" alt=\"rock\">";
     html += "<h2>Rock</h2><ul>";
-    html += "<li>" + NsongsRock[0] + "</li><li>" + NsongsRock[1] + "</li><li>" + NsongsRock[2] + "</li><li>" + NsongsRock[3] + "</li></ul>";
+
+    for (int i = 0; i < NsongsRock.size(); i++)
+    {
+        html += "<li>" + NsongsRock[i] + "</li>";
+    }
+
+    html += "</ul>";
     html += "</div><div class=\"album\">";
     html += "<img src=\"https://m.media-amazon.com/images/I/718LH2M0eML._SL1500_.jpg\" alt=\"pop\">";
     html += "<h2>Pop</h2><ul>";
-    html += "<li>" + NsongsPop[0] + "</li><li>" + NsongsPop[1] + "</li><li>" + NsongsPop[2] + "</li><li>" + NsongsPop[3] + "</li></ul>";
+
+    for (int i = 0; i < NsongsPop.size(); i++)
+    {
+        html += "<li>" + NsongsPop[i] + "</li>";
+    }
+
+    html += "</ul>";
     html += "</div></div></body></html>";
     request->send(200, "text/html", html); });
 
@@ -473,8 +489,7 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
             if(audio.getAudioFileDuration() % 60 < 10) display.print("0");
             display.print(audio.getAudioFileDuration() % 60);
             display.setCursor(0, 15);
-            if (GenreIndex == 0)
-            {
+            if (GenreIndex == 0){
 
                 int i = 0;
                 bool trobat = false;
@@ -502,39 +517,24 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
                         temp_cancion = NsongsPop[SongIndex];
                         temp_artista = temp_cancion.substring(0, i);
                         temp_cancion = temp_cancion.substring(i + 1);
-                        trobat = true;
-                 temp_cancion = temp_cancion.substring(i + 1);
+                        temp_cancion = temp_cancion.substring(i + 1);
                         trobat = true;
                     }
                     i++;
-
-
-            display.setCursor(0, 35);
-            display.print("de ");
-            display.println(temp_artista);
-        }
-
-        if (audio.isRunning())
-        {
-            display.fillTriangle(112, 50, 112, 58, 122, 54, SSD1306_WHITE);
-        }
-        else
-        {
-            display.fillRect(112, 50, 4, 8, SSD1306_WHITE);
-            display.fillRect(118, 50, 4, 8, SSD1306_WHITE);
-        }
-
-
-            for (int i = 0; i < temp_cancion.length(); i++)
-            {
-                if (temp_cancion[i] == '_')
-                    temp_cancion[i] = ' ';
+                }
             }
-            display.println(temp_cancion);
-            display.setCursor(0, 35);
-            display.print("de ");
-            display.println(temp_artista);
+        
+        for (int i = 0; i < temp_cancion.length(); i++)
+        {
+            if (temp_cancion[i] == '_')
+                temp_cancion[i] = ' ';
         }
+
+        display.println(temp_cancion);
+        display.setCursor(0, 35);
+        display.print("de ");
+        display.println(temp_artista);
+
         if (audio.isRunning())
         {
             display.fillTriangle(112, 50, 112, 58, 122, 54, SSD1306_WHITE);
@@ -543,11 +543,12 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
         {
             display.fillRect(112, 50, 4, 8, SSD1306_WHITE);
             display.fillRect(118, 50, 4, 8, SSD1306_WHITE);
+        }
+
         }
 
         display.display();
-
         vTaskDelay(1000);
-        }
     }
+    
 }
