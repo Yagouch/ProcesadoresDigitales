@@ -1054,7 +1054,7 @@ flowchart TD;
     E-->F[Declaración de funciones auxiliares y variables adicionales];
     F -->G[SETUP];
     F -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
-    H--> I[Inicialización de vectores de canciones (rock y pop)];
+    H--> I["Inicialización de vectores de canciones (rock y pop)"];
     I -->J[Configuración del servidor web];
     J -->K[Configuración de pines y habilitación de interrupciones];
     K -->L[Creación de una tarea para actualizar la pantalla OLED];
