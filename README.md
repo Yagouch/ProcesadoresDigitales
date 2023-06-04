@@ -1043,6 +1043,38 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
 }
 
 ```
+-->[];
+### Diagrama de flujo
+```mermaid
+flowchart TD;
+    A[Inicio] --> B[Declaración de librerías];
+    
+    A -->C[Configuración de pines y periféricos];
+    C-->D[Configura botones y establece interrupciones];
+    D -->E[Configura pantalla OLED];
+    E-->F[Inicializa sistema de archivos];
+    F -->G[Conecta a WiFi];
+    
+    A -->H[Reproducción de  música];
+    H--> I[Lee archivos de música de la tarjeta SD];
+    I -->J[Inicializa biblioteca de audio];
+    J -->K[Establece volumen inicial];
+    K -->L[Reproduce la primera canción];
+    L -->|Mientras haya música disponible| M[Verifica botones de control];
+    M-->N[Actualiza información en la pantalla OLED];
+    N -->O[Pasa a la siguiente canción];
+    
+    A -->P[Creación del servidor web];
+    P -->Q[Configura rutas de URL y funciones asociadas];
+    Q -->R[Define función para controlar reproducción de música];
+    R -->S[Define función para ajustar volumen];
+    S -->T[Define función para cambiar género de música];
+    T -->V[Inicia el servidor web];
+    
+```
+
+***
+
 
 
 
