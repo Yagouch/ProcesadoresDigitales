@@ -1053,17 +1053,14 @@ flowchart TD;
     D -->E["Declaración de funciones de interrupción (IRAM_ATTR)"];
     E-->F[Declaración de funciones auxiliares y variables adicionales];
     F -->G[SETUP];
-    F -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
+    G -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
     H--> I["Inicialización de vectores de canciones (rock y pop)"];
     I -->J[Configuración del servidor web];
     J -->K[Configuración de pines y habilitación de interrupciones];
     K -->L[Creación de una tarea para actualizar la pantalla OLED];
     L -->M[Conexión al sistema de archivos SD y carga de la primera canción];
     
-    F -->N[LOOP];
-    F -->O[Control de reproducción de audio];
-    O -->P[Gestión de solicitudes y acciones específicas a través del servidor web];
-    
+  
     
    
     
