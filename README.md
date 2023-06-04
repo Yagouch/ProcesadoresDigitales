@@ -1077,13 +1077,13 @@ flowchart TD;
     Y -->Z[Crea tarea para controlar pantalla OLED,se conecta al sistema de archivos de la SD y carga de la primera canción];
     
     A -->Z[LOOP];
-    Z -->Z [Llamada a la función "audio.loop()"];
+   
     
 ```
 
 ***
 
-
+ Z -->Z [Llamada a la función "audio.loop()"];
 
 
 
