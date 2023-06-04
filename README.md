@@ -1047,44 +1047,33 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
-    A[Inicio] --> B[<span style="color: red;">Declaración de librerías y constantes</span>];
+    A[Inicio] --> B[Declaración de librerías];
+    B -->C[Definición de pines y constantes];
+    C-->D[Declaración de variables globales y objetos];
+    D -->E["Declaración de funciones de interrupción (IRAM_ATTR)"];
+    E-->F[Declaración de funciones auxiliares y variables adicionales];
+    F -->G[SETUP];
+    F -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
+    H--> I[Inicialización de vectores de canciones (rock y pop)];
+    I -->J[Configuración del servidor web];
+    J -->K[Configuración de pines y habilitación de interrupciones];
+    K -->L[Creación de una tarea para actualizar la pantalla OLED];
+    L -->M[Conexión al sistema de archivos SD y carga de la primera canción];
     
-    A -->C[Configuración de pines y periféricos];
-    C-->D[Declara vectores para almacenar nombres de archivos por género,Configura botones y establece interrupciones];
-    D -->E[Configura pantalla OLED];
-    E-->F[Inicializa sistema de archivos];
-    F -->G[Conecta a WiFi];
+    F -->N[LOOP];
+    F -->O[Control de reproducción de audio];
+    O -->P[Gestión de solicitudes y acciones específicas a través del servidor web];
     
-    A -->H[Reproducción de  música];
-    H--> I[Lee archivos de música de la tarjeta SD];
-    I -->J[Inicializa biblioteca de audio];
-    J -->K[Establece volumen inicial];
-    K -->L[Reproduce la primera canción];
-    L -->|Mientras haya música disponible| M[Verifica botones de control];
-    M-->N[Actualiza información en la pantalla OLED];
-    N -->O[Pasa a la siguiente canción];
     
-    A -->P[Creación del servidor web];
-    P -->Q[Configura rutas de URL y funciones asociadas];
-    Q -->R[Define función para controlar reproducción de música];
-    R -->S[Define función para ajustar volumen];
-    S -->T[Define función para cambiar género de música];
-    T -->V[Inicia el servidor web];
+   
     
-    A -->W[SETUP];
-    W -->X[Inicia comunicación serial,protocolos I2S,SPI,I2C y vectores de canciones];
-    X -->Y[Configura servidor web,conexión WiFi,botones];
-    Y -->Z[Crea tarea para controlar pantalla OLED,se conecta al sistema de archivos de la SD y carga de la primera canción];
     
-    A -->Z2[LOOP];
-    Z2 -->Aa[Llamada a la función audio.loop];
    
     
 ```
 
 ***
 
- 
 
 
 
