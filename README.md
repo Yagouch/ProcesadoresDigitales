@@ -1071,6 +1071,11 @@ flowchart TD;
     S -->T[Define función para cambiar género de música];
     T -->V[Inicia el servidor web];
     
+    A -->W[SETUP];
+    W -->X[Inicia comunicación serial,protocolos I2S,SPI,I2C y vectores de canciones];
+    X -->Y[Configura servidor web,conexión WiFi,botones];
+    Y -->Z[Crea tarea para controlar pantalla OLED,se conecta al sistema de archivos de la SD y carga de la primera canción];
+    
 ```
 
 ***
