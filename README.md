@@ -1,4 +1,4 @@
-# Proyecto
+# Proyecto Yago Carballo y Ramon Llobet
 [Repositorio](https://github.com/Yagouch/Proyecto.git)
 
 # Índice de prácticas de Procesadores Digitales
