@@ -1,5 +1,5 @@
 # Práctica 1 - Blink #
-## Yago Carballo Barroso y Ramón Llobet Duch
+## Yago Carballo Barroso y Ramon Llobet Duch
 En esta práctica produciremos un parpadeo periodico de un led y se utilizará la salida serie para depurar el programa.
 ### **Código** ###
 ```ino
