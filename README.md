@@ -1047,7 +1047,7 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
-    A[Inicio] --> B[Declaración de librerías y constantes];
+    A[Inicio] --> B[**Declaración de librerías y constantes**];
     
     A -->C[Configuración de pines y periféricos];
     C-->D[Declara vectores para almacenar nombres de archivos por género,Configura botones y establece interrupciones];
