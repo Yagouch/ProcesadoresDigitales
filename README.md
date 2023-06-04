@@ -1076,6 +1076,9 @@ flowchart TD;
     X -->Y[Configura servidor web,conexión WiFi,botones];
     Y -->Z[Crea tarea para controlar pantalla OLED,se conecta al sistema de archivos de la SD y carga de la primera canción];
     
+    A -->Z2[LOOP];
+    Z2 -->Z3[Llamada a la función "audio.loop()"];
+    
 ```
 
 ***
