@@ -420,8 +420,21 @@ audio.loop();
 }
 
 ```
-### *4.0 (MODIFICAR/CORREGIR)*
-En esta versión del proyecto se crean botones para poder pausar/reanudar las canciones, subir/bajar el voluemen de audio y pasar a la siguiente/anterior canción.
+### *4.0*
+Versión definitiva del proyecto.
+En esta versión se incluye la implementación para manejar el reproductor MP3/Web radio a través de botones físicos y se incorpora una pantalla OLED para poder visualizar el nombre de la canción que se está reproduciendo, nivel de volumen, duración de la canción...
+tambíen podremos reproducir emisoras de radio en streaming. 
+
+Se incluyen las librerías ```#include <vector>``` (para el uso de vectores),
+```#include <Ticker.h>```(para generar interrupciones periódicas), ```#include <Adafruit_SSD1306.h>``` (para el manejo de la pantalla OLED).
+
+Se definen las medidas de la pantalla OLED y los pines de los botones.
+También definimos vectores que almacenarán los nombres de archivos de canciones por género.
+Creamos rutinas de interrupción que se ejecutan cuando se produce un evento de interrupción en los pies configurados mediante ```attachInterrupt()```.
+
+
+
+
 
 ```ino
 
@@ -460,10 +473,6 @@ using namespace std;
 #define BUTTON_volumeUP_pin 2
 #define BUTTON_volumeDOWN_pin 15
 
-//BOTONES PARA SIGUIENTE/ANTERIOR CANCIÓN:
-#define BUTTON_next_pin 14
-#define BUTTON_previous_pin 13
-
 
 const char *ssid = "MOVISTAR_D84E";      // WiFi casa: "MOVISTAR_D84E" -- Wifi móvil: "realme"
 const char *password = ";9o2a3ei5RY#!:"; // WiFi casa: ";9o2a3ei5RY#!:" -- Wifi móvil: "123456kk"
@@ -491,7 +500,7 @@ vector<String> GenreNames;
 //Para controlar la reproducción de canciones y géneros:
 int SongIndex = 0;
 int GenreIndex = 0;
-int Volume = 6;//para almacenar el volumen de reproducción.
+int Volume = 4;//para almacenar el volumen de reproducción.
 
 // Ticker para el cambio de canción automático
 Ticker ticker;
@@ -499,12 +508,6 @@ Ticker ticker;
 // Boton
 const unsigned long debounceDelay = 50;
 volatile unsigned long lastDebounceTime = 0;
-
-//PARA SIGUIENTE/ANTERIOR CANCIÓN:
-volatile bool nextButtonPressed = false;
-volatile bool previousButtonPressed = false;
-volatile unsigned long lastNextDebounceTime = 0;
-volatile unsigned long lastPreviousDebounceTime = 0;
 
 //Las siguientes funciones  marcadas con el atributo IRAM_ATTR son rutinas de interrupción que se ejecutan cuando se produce
 //un evento de interrupción en los pines configurados mediante attachInterrupt()
@@ -539,25 +542,6 @@ void IRAM_ATTR ISR_volumeDOWN()
         if (Volume < 0) Volume = 0;
         audio.setVolume(Volume);
         lastDebounceTime = millis(); // Actualizar el tiempo de debounce
-    }
-}
-
-//PARA SIGUIENTE/ANTERIOR CANCIÓN:
-void IRAM_ATTR ISR_nextButton()
-{
-    if ((millis() - lastNextDebounceTime) > debounceDelay)
-    {
-        nextButtonPressed = true;
-        lastNextDebounceTime = millis();
-    }
-}
-
-void IRAM_ATTR ISR_previousButton()
-{
-    if ((millis() - lastPreviousDebounceTime) > debounceDelay)
-    {
-        previousButtonPressed = true;
-        lastPreviousDebounceTime = millis();
     }
 }
 
@@ -602,10 +586,10 @@ void Init_vector_rock();
 //inicializa un vector de canciones de género rock. Lee el archivo "rock.txt" y extrae los nombres de las canciones. 
 //Luego, utiliza la función URLconverter para convertir cada nombre de canción en una URL válida 
 //y los almacena en el vector songsRock.
-void Init_vector_pop();//similar a la función anterior.
-void Init_protocols();// inicializa la pantalla OLED, el protocolo I2S, el protocolo SPI y la tarjeta SD.
-void Init_WebServer();//configura la conexión WiFi y muestra por la consola la dirección IP asignada al microcontrolador.
-void Server_handle();//establece las distintas rutas y acciones que se manejarán en el servidor web.
+void Init_vector_pop(); //similar a la función anterior.
+void Init_protocols(); //inicializa la pantalla OLED, el protocolo I2S, el protocolo SPI y la tarjeta SD.
+void Init_WebServer(); //configura la conexión WiFi y muestra por la consola la dirección IP asignada al microcontrolador.
+void Server_handle(); //establece las distintas rutas y acciones que se manejarán en el servidor web.
 
 void pantalla(void *parameter);//se encarga de actualizar la pantalla OLED con información relevante, como el volumen, el estado de reproducción y la duración de la canción actual.
 
@@ -635,34 +619,27 @@ void setup()
     server.begin();
 
     // ---------</WEB>----------
-
+    
     pinMode(BUTTON_pin, INPUT_PULLUP); // Configurar el pin del botón como entrada con resistencia pull-up interna
     pinMode(BUTTON_volumeUP_pin, INPUT_PULLUP);
     pinMode(BUTTON_volumeDOWN_pin, INPUT_PULLUP);
-    
-    //PARA SIGUIENTE/ANTERIOR CANCIÓN:
-    pinMode(BUTTON_next_pin, INPUT_PULLUP);
-    pinMode(BUTTON_previous_pin, INPUT_PULLUP);
 
     attachInterrupt(digitalPinToInterrupt(BUTTON_pin), isr, RISING); // Asignar la interrupción al pin del botón  cuando se detecta un flanco de subida.
     attachInterrupt(digitalPinToInterrupt(BUTTON_volumeUP_pin), ISR_volumeUP, RISING);// Asigna la interrupción al pin del botón de aumento de volumen.
     attachInterrupt(digitalPinToInterrupt(BUTTON_volumeDOWN_pin), ISR_volumeDOWN, RISING);//Asigna la interrupción al pin del botón de disminución de volumen.
-    
-    //PARA SIGUIENTE/ANTERIOR CANCIÓN:
-    attachInterrupt(digitalPinToInterrupt(BUTTON_next_pin), ISR_nextButton, RISING);
-    attachInterrupt(digitalPinToInterrupt(BUTTON_previous_pin), ISR_previousButton, RISING);
 
     //Se crea una tarea en segundo plano para controlar la pantalla OLED:
-    xTaskCreatePinnedToCore(
-        pantalla,   /* Función que implementa la tarea. */
-        "pantalla", /* Nombre de la tarea. */
-        2000,       /* Tamaño de la pila de la tarea */
-        NULL,       /* Parámetros de la tarea */
-        1,          /* Prioridad de la tarea */
-        NULL,       /* Referencia a la tarea */
-        0);         /* Núcleo donde se ejecutará la tarea */
+    xTaskCreatePinnedToCore( 
+        pantalla,   // Función que implementa la tarea.
+        "pantalla", // Nombre de la tarea.
+        2000,       // Tamaño de la pila de la tarea
+        NULL,       // Parámetros de la tarea
+        1,          // Prioridad de la tarea
+        NULL,       // Referencia a la tarea
+        0);         // Núcleo donde se ejecutará la tarea
 
     audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);// para conectar al sistema de archivos SD y cargar la primera canción del género actual.
+
 }
 
 void loop()
@@ -670,27 +647,6 @@ void loop()
     audio.loop();//se encarga de controlar el reproductor de audio y mantenerlo en funcionamiento.
     //las funciones auxiliares (change_song/genre, toggle_playback, increase_volume...) se utilizan para realizar acciones específicas,
     //como cambiar la canción, cambiar el género, ajustar el volumen y actualizar la pantalla OLED.
-    
-    //PARA SIGUIENTE/ANTERIOR CANCIÓN:
-    if (nextButtonPressed)
-    {
-        nextButtonPressed = false;
-        SongIndex++;
-        if (SongIndex >= (*songFiles[GenreIndex]).size())
-            SongIndex = 0;
-        audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
-    }
-
-    if (previousButtonPressed)
-    {
-        previousButtonPressed = false;
-        if (SongIndex == 0)
-            SongIndex = (*songFiles[GenreIndex]).size() - 1;
-        else
-            SongIndex--;
-        audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
-    }
-    
 }
 
 void Init_vector_rock()//se encarga de inicializar los vectores de canciones para los géneros de rock
@@ -763,6 +719,10 @@ void Init_protocols()
         while (true)
             ;
     }
+    else
+    {
+        Serial.println("Pantalla OLED iniciada");
+    }
 
     //---------I2S y SPI----------
     pinMode(SD_CS, OUTPUT);
@@ -795,16 +755,28 @@ void Server_handle()
     //Otras rutas como "/toggle", "/next", "/previous", "/soundUp", "/soundDown" y otras, se encargan de realizar acciones específicas como pausar/reanudar la reproducción, cambiar de canción, ajustar el volumen, etc.
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
+    {
     html += "<div class=\"album-list\">";
     html += "<div class=\"album\">";
     html += "<img src=\"https://m.media-amazon.com/images/I/919JyJJiTtL._SL1500_.jpg\" alt=\"rock\">";
     html += "<h2>Rock</h2><ul>";
-    html += "<li>" + NsongsRock[0] + "</li><li>" + NsongsRock[1] + "</li><li>" + NsongsRock[2] + "</li><li>" + NsongsRock[3] + "</li></ul>";
+
+    for (int i = 0; i < NsongsRock.size(); i++)
+    {
+        html += "<li>" + NsongsRock[i] + "</li>";
+    }
+
+    html += "</ul>";
     html += "</div><div class=\"album\">";
     html += "<img src=\"https://m.media-amazon.com/images/I/718LH2M0eML._SL1500_.jpg\" alt=\"pop\">";
     html += "<h2>Pop</h2><ul>";
-    html += "<li>" + NsongsPop[0] + "</li><li>" + NsongsPop[1] + "</li><li>" + NsongsPop[2] + "</li><li>" + NsongsPop[3] + "</li></ul>";
+
+    for (int i = 0; i < NsongsPop.size(); i++)
+    {
+        html += "<li>" + NsongsPop[i] + "</li>";
+    }
+
+    html += "</ul>";
     html += "</div></div></body></html>";
     request->send(200, "text/html", html); });
 
@@ -906,7 +878,7 @@ void Server_handle()
 void pantalla(void *parameter)//para actualizar la pantalla OLED
 {
     //Muestra el volumen actual, el género de música, el nombre de la canción y el artista. 
-    //También muestra un indicador visual de reproducción (un triángulo lleno o rectángulos) dependiendo del estado de reproducción actual
+    //También muestra un indicador visual de reproducción (un triángulo o rectángulos) dependiendo del estado de reproducción actual
     String temp_cancion;
     String temp_artista;
     display.clearDisplay();
@@ -957,8 +929,7 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
             if(audio.getAudioFileDuration() % 60 < 10) display.print("0");
             display.print(audio.getAudioFileDuration() % 60);
             display.setCursor(0, 15);
-            if (GenreIndex == 0)
-            {
+            if (GenreIndex == 0){
 
                 int i = 0;
                 bool trobat = false;
@@ -986,46 +957,24 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
                         temp_cancion = NsongsPop[SongIndex];
                         temp_artista = temp_cancion.substring(0, i);
                         temp_cancion = temp_cancion.substring(i + 1);
-                        trobat = true;
-                 temp_cancion = temp_cancion.substring(i + 1);
+                        temp_cancion = temp_cancion.substring(i + 1);
                         trobat = true;
                     }
                     i++;
-
-
-            display.setCursor(0, 35);
-            display.print("de ");
-            display.println(temp_artista);
-        }
-        if (audio.isRunning())
-        {
-            display.fillTriangle(112, 50, 112, 58, 122, 54, SSD1306_WHITE);
-        }
-        else
-        {
-            display.fillRect(112, 50, 4, 8, SSD1306_WHITE);
-            display.fillRect(118, 50, 4, 8, SSD1306_WHITE);
-        }
-
-        display.display();
-
-        vTaskDelay(1000);
-    }
-}   }
-                    i++;
                 }
             }
-
-            for (int i = 0; i < temp_cancion.length(); i++)
-            {
-                if (temp_cancion[i] == '_')
-                    temp_cancion[i] = ' ';
-            }
-            display.println(temp_cancion);
-            display.setCursor(0, 35);
-            display.print("de ");
-            display.println(temp_artista);
+        
+        for (int i = 0; i < temp_cancion.length(); i++)
+        {
+            if (temp_cancion[i] == '_')
+                temp_cancion[i] = ' ';
         }
+
+        display.println(temp_cancion);
+        display.setCursor(0, 35);
+        display.print("de ");
+        display.println(temp_artista);
+
         if (audio.isRunning())
         {
             display.fillTriangle(112, 50, 112, 58, 122, 54, SSD1306_WHITE);
@@ -1036,14 +985,16 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
             display.fillRect(118, 50, 4, 8, SSD1306_WHITE);
         }
 
-        display.display();
+        }
 
+        display.display();
         vTaskDelay(1000);
     }
+    
 }
 
 ```
--->[];
+
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
