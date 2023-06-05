@@ -443,7 +443,7 @@ Creamos rutinas de interrupción que se ejecutan cuando se produce un evento de 
 #include <SPI.h>// Biblioteca para el manejo de la comunicación SPI.
 #include <vector>//Para uso de vectores
 #include <Ticker.h>//Para generar interrupciones periódicas
-#include <Adafruit_SSD1306.h>//Biblioteca para el manejo de la pantalla OLED
+#include <Adafruit_SSD1306.h>//Biblioteca para el manejo de la pantalla OLED¡
 
 using namespace std;
 
@@ -480,15 +480,19 @@ extern String html;
 Audio audio;// para el manejo de la reproducción de audio.
 File archivo;//para el acceso a archivos en la tarjeta SD.
 
-//Vectores que almacenarán los nombres de archivos de canciones por género (rock y pop):
+//Vectores que almacenarán los nombres de archivos de canciones por género (rock,pop...):
 vector<const char *> songsRock;
 vector<const char *> songsPop;
-vector<const char *> *songFiles[2] = {&songsRock, &songsPop};
+vector<const char *> songsMetal;
+vector<const char *> songsOtros;
+vector<const char *> *songFiles[4] = {&songsRock, &songsPop, &songsMetal, &songsOtros};
 //para acceder a los vectores de canciones según el índice del género
 
 // Solo para guardar los nombre de las canciones
 vector<String> NsongsRock;
 vector<String> NsongsPop;
+vector<String> NsongsMetal;
+vector<String> NsongsOtros;
 
 // Variables para el control de la reproducción
 vector<String> GenreNames;
@@ -496,13 +500,13 @@ vector<String> GenreNames;
 //Para controlar la reproducción de canciones y géneros:
 int SongIndex = 0;
 int GenreIndex = 0;
-int Volume = 4;//para almacenar el volumen de reproducción.
+int Volume = 6;//para almacenar el volumen de reproducción.
 
 // Ticker para el cambio de canción automático
 Ticker ticker;
 
 // Boton
-const unsigned long debounceDelay = 50;
+const unsigned long debounceDelay = 100;
 volatile unsigned long lastDebounceTime = 0;
 
 //Las siguientes funciones  marcadas con el atributo IRAM_ATTR son rutinas de interrupción que se ejecutan cuando se produce
@@ -558,8 +562,6 @@ auto tick = []()
 {
     if (audio.getAudioCurrentTime() >= audio.getAudioFileDuration() && audio.getAudioFileDuration() != 0)
     { // Cuando pones radios la duración es 0
-        Serial.println(audio.getAudioCurrentTime());
-        Serial.println(audio.getAudioFileDuration());
         SongIndex++;
         if (SongIndex >= (*songFiles[GenreIndex]).size())
             SongIndex = 0;
@@ -583,6 +585,8 @@ void Init_vector_rock();
 //Luego, utiliza la función URLconverter para convertir cada nombre de canción en una URL válida 
 //y los almacena en el vector songsRock.
 void Init_vector_pop(); //similar a la función anterior.
+void Init_vector_metal();
+void Init_vector_otros();
 void Init_protocols(); //inicializa la pantalla OLED, el protocolo I2S, el protocolo SPI y la tarjeta SD.
 void Init_WebServer(); //configura la conexión WiFi y muestra por la consola la dirección IP asignada al microcontrolador.
 void Server_handle(); //establece las distintas rutas y acciones que se manejarán en el servidor web.
@@ -605,6 +609,12 @@ void setup()
 
     // Pop
     Init_vector_pop();//para inicializar el vector de canciones de pop.
+
+    // Metal
+    Init_vector_metal();//para inicializar el vector de canciones de metal.
+
+    // Otros
+    Init_vector_otros();//para inicializar el vector de canciones de otros géneros.
 
     // ----------<WEB>----------
 
@@ -666,7 +676,7 @@ void Init_vector_rock()//se encarga de inicializar los vectores de canciones par
             strcpy(temp, prov.c_str());
             songsRock.push_back(temp);
         }
-        songsRock.pop_back(); // El archivo tiene una linea en blanco de más al final
+        
         archivo.close();
     }
     else
@@ -675,7 +685,7 @@ void Init_vector_rock()//se encarga de inicializar los vectores de canciones par
     }
     return;
 }
-//Ahora para el género pop
+
 void Init_vector_pop()
 {
     archivo = SD.open("/pop.txt");
@@ -695,12 +705,71 @@ void Init_vector_pop()
             strcpy(temp, prov.c_str());
             songsPop.push_back(temp);
         }
-        songsPop.pop_back();
         archivo.close();
     }
     else
     {
         Serial.println("Error al abrir el archivo pop.txt");
+    }
+    return;
+}
+
+void Init_vector_metal()//se encarga de inicializar los vectores de canciones para los géneros de rock
+{
+
+    //abre archivo de texto correspondiente, lee las canciones del archivo y las almacena en el vector songsRock.
+    archivo = SD.open("/metal.txt");
+    GenreNames.push_back("metal");//se guarda el nombre del género en el vector GenreNames
+    String linea;
+    String prov;
+
+    if (archivo)
+    {
+        while (archivo.available())
+        {
+            linea = archivo.readStringUntil('.');
+            linea.trim();
+            NsongsMetal.push_back(linea);
+            prov = URLconverter(linea, GenreNames[GenreNames.size() - 1]);
+            char *temp = new char[prov.length() + 1];
+            strcpy(temp, prov.c_str());
+            songsMetal.push_back(temp);
+        }
+        archivo.close();
+    }
+    else
+    {
+        Serial.println("Error al abrir el archivo metal.txt");
+    }
+    return;
+}
+
+void Init_vector_otros()//se encarga de inicializar los vectores de canciones para los géneros de rock
+{
+
+    //abre archivo de texto correspondiente, lee las canciones del archivo y las almacena en el vector songsRock.
+    archivo = SD.open("/otros.txt");
+    GenreNames.push_back("otros");//se guarda el nombre del género en el vector GenreNames
+    String linea;
+    String prov;
+
+    if (archivo)
+    {
+        while (archivo.available())
+        {
+            linea = archivo.readStringUntil('.');
+            linea.trim();
+            NsongsOtros.push_back(linea);
+            prov = URLconverter(linea, GenreNames[GenreNames.size() - 1]);
+            char *temp = new char[prov.length() + 1];
+            strcpy(temp, prov.c_str());
+            songsOtros.push_back(temp);
+        }
+        archivo.close();
+    }
+    else
+    {
+        Serial.println("Error al abrir el archivo otros.txt");
     }
     return;
 }
@@ -750,125 +819,148 @@ void Server_handle()
     //la ruta "/" responde a una solicitud GET mostrando una página HTML que contiene información sobre los géneros de música (rock y pop) y las canciones disponibles. 
     //Otras rutas como "/toggle", "/next", "/previous", "/soundUp", "/soundDown" y otras, se encargan de realizar acciones específicas como pausar/reanudar la reproducción, cambiar de canción, ajustar el volumen, etc.
 
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-    {
-    html += "<div class=\"album-list\">";
-    html += "<div class=\"album\">";
-    html += "<img src=\"https://m.media-amazon.com/images/I/919JyJJiTtL._SL1500_.jpg\" alt=\"rock\">";
-    html += "<h2>Rock</h2><ul>";
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        html += "<div class=\"album-list\">";
+        html += "<div class=\"album\">";
+        html += "<img src=\"https://m.media-amazon.com/images/I/919JyJJiTtL._SL1500_.jpg\" alt=\"rock\">";
+        html += "<h2>Rock</h2><ul>";
 
-    for (int i = 0; i < NsongsRock.size(); i++)
-    {
-        html += "<li>" + NsongsRock[i] + "</li>";
-    }
+        for (int i = 0; i < NsongsRock.size(); i++)
+        {
+            html += "<li>" + NsongsRock[i] + "</li>";
+        }
 
-    html += "</ul>";
-    html += "</div><div class=\"album\">";
-    html += "<img src=\"https://m.media-amazon.com/images/I/718LH2M0eML._SL1500_.jpg\" alt=\"pop\">";
-    html += "<h2>Pop</h2><ul>";
+        html += "</ul>";
+        html += "</div><div class=\"album\">";
+        html += "<img src=\"https://m.media-amazon.com/images/I/718LH2M0eML._SL1500_.jpg\" alt=\"pop\">";
+        html += "<h2>Pop</h2><ul>";
 
-    for (int i = 0; i < NsongsPop.size(); i++)
-    {
-        html += "<li>" + NsongsPop[i] + "</li>";
-    }
+        for (int i = 0; i < NsongsPop.size()-1; i++)
+        {
+            html += "<li>" + NsongsPop[i] + "</li>";
+        }
 
-    html += "</ul>";
-    html += "</div></div></body></html>";
-    request->send(200, "text/html", html); });
+        html += "</ul>";
+        html += "</div><div class=\"album\">";
+        html += "<img src=\"https://media.istockphoto.com/id/1066177112/it/vettoriale/carattere-alfabeto-heavy-metal-lettere-e-numeri-smussati-di-chrome.jpg?s=612x612&w=0&k=20&c=zC7oMVWFXOawKujN9WH9yKwiY7Oc6stczAvfAxRW54c=\" alt=\"metal\">";
+        html += "<h2>Metal</h2><ul>";
 
-    server.on("/toggle", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    request->send(200); });
-    server.on("/next", HTTP_GET, [](AsyncWebServerRequest *request) { // if (SongIndex>=4) SongIndex=0;
+        for (int i = 0; i < NsongsMetal.size(); i++)
+        {
+            html += "<li>" + NsongsMetal[i] + "</li>";
+        }
+
+        html += "</ul>";
+        html += "</div><div class=\"album\">";
+        html += "<img src=\"https://png.pngtree.com/background/20210715/original/pngtree-electronic-music-album-picture-image_1301130.jpg\" alt=\"otros\">";
+        html += "<h2>Otros</h2><ul>";
+
+        for (int i = 0; i < NsongsOtros.size(); i++)
+        {
+            html += "<li>" + NsongsOtros[i] + "</li>";
+        }
+
+        html += "</ul>";
+        html += "</div></div></body></html>";
+        request->send(200, "text/html", html);
+    });
+    
+    server.on("/toggle", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        request->send(200); 
+    });
+    server.on("/next", HTTP_GET, [](AsyncWebServerRequest *request) {
         audio.pauseResume();
         SongIndex++;
-        if (SongIndex >= (*songFiles[GenreIndex]).size())
+        if (SongIndex > (*songFiles[GenreIndex]).size()-1)
             SongIndex = 0;
         audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
         request->send(200);
     });
-    server.on("/previous", HTTP_GET, [](AsyncWebServerRequest *request) { // if (SongIndex<0) SongIndex=4;
+    server.on("/previous", HTTP_GET, [](AsyncWebServerRequest *request) {
         audio.pauseResume();
         SongIndex--;
         if (SongIndex < 0)
-            SongIndex = (*songFiles[GenreIndex]).size() - 1;
+            SongIndex = (*songFiles[GenreIndex]).size()-1;
         audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
         request->send(200);
     });
-    server.on("/Gnext", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    GenreIndex++; SongIndex=0;
-    if (GenreIndex>=2) GenreIndex=0;
-    audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
-    request->send(200); });
-    server.on("/Gprevious", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    GenreIndex--; SongIndex=0;
-    if (GenreIndex<0) GenreIndex=1;
-    audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
-    request->send(200); });
-    server.on("/soundUp", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    Volume+=2;
-    if (Volume > 21) Volume = 21;
-    audio.setVolume(Volume);
-    request->send(200); });
-    server.on("/soundDown", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    Volume-=2;
-    if(Volume < 0) Volume = 0;
-    audio.setVolume(Volume);
-    request->send(200); });
-    server.on("/lpf", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.setTone(3,-20,-20);
-    request->send(200); });
-    server.on("/hpf", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.setTone(-20,-20,3);
-    request->send(200); });
-    server.on("/bpf", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.setTone(-20, 3,-20);
-    request->send(200); });
-    server.on("/normal", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.setTone(0,0,0);
-    request->send(200); });
-
-    server.on("/radio1", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    LastRadio="Cadena SER";
-    audio.connecttohost(urlRadio1);
-    request->send(200); });
-    server.on("/radio2", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    LastRadio="Flaixbac";
-    audio.connecttohost(urlRadio2);
-    request->send(200); });
-    server.on("/radio3", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    LastRadio="Los 40 Principales";
-    audio.connecttohost(urlRadio3);
-    request->send(200); });
-    server.on("/radio4", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    LastRadio="Los 40 Classic";
-    audio.connecttohost(urlRadio4);
-    request->send(200); });
-    server.on("/radio5", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-    audio.pauseResume();
-    LastRadio="rac 105";
-    audio.connecttohost(urlRadio5);
-    request->send(200); });
+    //Géneros
+    server.on("/Gnext", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        GenreIndex++; SongIndex=0;
+        if (GenreIndex>=4) GenreIndex=0;
+        audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
+        request->send(200); 
+    });
+    server.on("/Gprevious", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        GenreIndex--; SongIndex=0;
+        if (GenreIndex<0) GenreIndex=3;
+        audio.connecttoFS(SD, (*songFiles[GenreIndex])[SongIndex]);
+        request->send(200); 
+    });
+    //Sonido
+    server.on("/soundUp", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Volume+=2;
+        if (Volume > 20) Volume = 20;
+        audio.setVolume(Volume);
+        request->send(200); 
+    });
+    server.on("/soundDown", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Volume-=2;
+        if(Volume < 0) Volume = 0;
+        audio.setVolume(Volume);
+        request->send(200); 
+    });
+    //Filtros
+    server.on("/lpf", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.setTone(3,-20,-20);
+        request->send(200); 
+    });
+    server.on("/hpf", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.setTone(-20,-20,3);
+        request->send(200); 
+    });
+    server.on("/bpf", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.setTone(-20, 3,-20);
+        request->send(200); 
+    });
+    server.on("/normal", HTTP_GET, [](AsyncWebServerRequest *request){
+        audio.setTone(0,0,0);
+        request->send(200); 
+    });
+    //Radios
+    server.on("/radio1", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        LastRadio="Cadena SER";
+        audio.connecttohost(urlRadio1);
+        request->send(200); 
+    });
+    server.on("/radio2", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        LastRadio="Flaixbac";
+        audio.connecttohost(urlRadio2);
+        request->send(200); 
+    });
+    server.on("/radio3", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        LastRadio="Los 40 Principales";
+        audio.connecttohost(urlRadio3);
+        request->send(200); 
+    });
+    server.on("/radio4", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        LastRadio="Los 40 Classic";
+        audio.connecttohost(urlRadio4);
+        request->send(200); 
+    });
+    server.on("/radio5", HTTP_GET, [](AsyncWebServerRequest *request) {
+        audio.pauseResume();
+        LastRadio="rac 105";
+        audio.connecttohost(urlRadio5);
+        request->send(200); 
+    });
 }
 
 void pantalla(void *parameter)//para actualizar la pantalla OLED
@@ -941,7 +1033,7 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
                     i++;
                 }
             }
-            else
+            else if (GenreIndex == 1)
             {
 
                 int i = 0;
@@ -953,6 +1045,37 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
                         temp_cancion = NsongsPop[SongIndex];
                         temp_artista = temp_cancion.substring(0, i);
                         temp_cancion = temp_cancion.substring(i + 1);
+                        trobat = true;
+                    }
+                    i++;
+                }
+            }
+            else if (GenreIndex == 2)
+            {
+                int i = 0;
+                bool trobat = false;
+                while (i < NsongsMetal[SongIndex].length() && !trobat)
+                {
+                    if (NsongsMetal[SongIndex][i] == '-')
+                    {
+                        temp_cancion = NsongsMetal[SongIndex];
+                        temp_artista = temp_cancion.substring(0, i);
+                        temp_cancion = temp_cancion.substring(i + 1);
+                        trobat = true;
+                    }
+                    i++;
+                }
+            }
+            else
+            {
+                int i = 0;
+                bool trobat = false;
+                while (i < NsongsOtros[SongIndex].length() && !trobat)
+                {
+                    if (NsongsOtros[SongIndex][i] == '-')
+                    {
+                        temp_cancion = NsongsOtros[SongIndex];
+                        temp_artista = temp_cancion.substring(0, i);
                         temp_cancion = temp_cancion.substring(i + 1);
                         trobat = true;
                     }
