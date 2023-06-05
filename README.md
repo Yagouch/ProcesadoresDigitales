@@ -432,10 +432,6 @@ Se definen las medidas de la pantalla OLED y los pines de los botones.
 También definimos vectores que almacenarán los nombres de archivos de canciones por género.
 Creamos rutinas de interrupción que se ejecutan cuando se produce un evento de interrupción en los pies configurados mediante ```attachInterrupt()```.
 
-
-
-
-
 ```ino
 
 #include <Arduino.h>//Incluye las definiciones básicas de Arduino para la placa ESP32.
@@ -1028,6 +1024,13 @@ flowchart TD;
 ```
 
 ***
+
+### **RESULTADO FINAL (PÁGINA WEB Y IMPLEMENTACIÓN FÍSICA DEL REPRODUCTOR)**
+
+<img src="IMG-3506.PNG" alt="Imagen del reproductor de audio MP3" width="600" height="450">
+
+
+
 
 
 
