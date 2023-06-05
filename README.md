@@ -1027,10 +1027,9 @@ flowchart TD;
 
 ### **RESULTADO FINAL (PÁGINA WEB Y IMPLEMENTACIÓN FÍSICA DEL REPRODUCTOR)**
 
-<img src="IMG-3506.PNG" alt="Imagen del reproductor de audio MP3" width="600" height="450">
 
 
-
+![IMG-3506](https://github.com/Yagouch/Proyecto/assets/126197495/256d6314-b9db-4f4a-a2a5-395a6e9cf0d5)
 
 
 
