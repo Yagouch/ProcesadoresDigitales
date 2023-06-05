@@ -1052,21 +1052,28 @@ flowchart TD;
     C-->D[Declaración de variables globales y objetos];
     D -->E["Declaración de funciones de interrupción (IRAM_ATTR)"];
     E-->F[Declaración de funciones auxiliares y variables adicionales];
-    F -->G[SETUP];
+    
+    F -->G[SETUP:];
     G -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
-    H--> I["Inicialización de vectores de canciones (rock y pop)"];
-    I -->J[Configuración del servidor web];
+    H--> I[Inicialización de vectores de canciones];
+    I -->J[Configuración del servidor web,conexión WiFi y botones];
     J -->K[Configuración de pines y habilitación de interrupciones];
     K -->L[Creación de una tarea para actualizar la pantalla OLED];
     L -->M[Conexión al sistema de archivos SD y carga de la primera canción];
     
+    M-->N[LOOP: ];
+    
+    N -->O[Control de reproducción de audio];
+    O -->P[Gestión de solicitudes y acciones específicas a través del servidor web];
+    
+    P -->Q["Declaración e implementación de funciones auxiliares (relacionadas con inicialización y manejo del  servidor web)"];
+    Q -->R[función Init_vector_rock(),pop()... para la inicialización de los vectores de canciones para los géneros];
+    R -->S["función Init_protocols() (inicializa pantalla OLED,Configura pines I2S y SPI,configuración audio) "];
+    S -->T[Define función para cambiar género de música];
+    T -->V["función Init_WebServer() para configurar y establecer la conexión con el servidor web"];
+    V -->W["función Server_handle() para el manejo de las diferentes solicitudes HTTP recibidas por el servidor web"];
+    W -->X["actualización  pantalla OLED (función pantalla)"];
   
-    
-   
-    
-    
-   
-    
 ```
 
 ***
