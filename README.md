@@ -1031,6 +1031,8 @@ flowchart TD;
 
 ![IMG-3506](https://github.com/Yagouch/Proyecto/assets/126197495/256d6314-b9db-4f4a-a2a5-395a6e9cf0d5)
 
+![IMG-3507](https://github.com/Yagouch/Proyecto/assets/126197495/bdc51460-28ac-45d3-9ff1-d88e39ec035d)
 
+![IMG-3504](https://github.com/Yagouch/Proyecto/assets/126197495/7f7cbbd4-9f69-4d93-b2f2-faa65c781853)
 
 
