@@ -994,35 +994,38 @@ void pantalla(void *parameter)//para actualizar la pantalla OLED
 ### Diagrama de flujo
 ```mermaid
 flowchart TD;
-    A[Inicio] --> B[Declaración de librerías];
-    B -->C[Definición de pines y constantes];
-    C-->D[Declaración de variables globales y objetos];
-    D -->E["Declaración de funciones de interrupción (IRAM_ATTR)"];
-    E -->F[Declaración de funciones auxiliares y variables adicionales];
-    
-    F -->G[SETUP:];
-    G -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
-    H --> I[Inicialización de vectores de canciones];
-    I -->J[Configuración del servidor web,conexión WiFi y botones];
-    J -->K[Configuración de pines y habilitación de interrupciones];
-    K -->L[Creación de una tarea para actualizar la pantalla OLED];
-    L -->M[Conexión al sistema de archivos SD y carga de la primera canción];
-    
-    M-->N[LOOP: ];
-    
-    N -->O[Control de reproducción de audio];
-    O -->P[Gestión de solicitudes y acciones específicas a través del servidor web];
-    
-    P -->Q["Declaración e implementación de funciones auxiliares (relacionadas con inicialización y manejo del  servidor web)"];
-    Q -->R["función Init_vector_rock(),pop()... para la inicialización de los vectores de canciones para los géneros"];
-    R -->S["función Init_protocols() (inicializa pantalla OLED,Configura pines I2S y SPI,configuración audio) "];
-    S -->T[Define función para cambiar género de música];
-    T -->V["función Init_WebServer() para configurar y establecer la conexión con el servidor web"];
-    V -->W["función Server_handle() para el manejo de las diferentes solicitudes HTTP recibidas por el servidor web"];
-    W -->X["actualización  pantalla OLED (función pantalla)"];
-  
-```
 
+    A[Inicio] --> B[Declaración de librerías];
+    subgraph GLOBAL
+    B --> C[Definición de pines y constantes];
+    C --> D[Llamada del index.cpp]
+    D--> E[Declaración de variables globales];
+    E --> F["Declaración de funciones de interrupción (IRAM_ATTR)"];
+    F --> G[Declaración de funciones auxiliares y variables adicionales];
+    G --> U[Llamadas a la acción de funciones]
+    
+    end
+    subgraph SETUP
+
+    U -->H["Inicialización de comunicaciones y protocolos (I2S, SPI, I2C)"];
+    H --> H1[Declarar el ticker cada 5 sec]
+    H1 --> I[Inicialización de vectores de canciones];
+    I --> J[Inicialización del servidor Web y conexión WiFi];
+    J --> J1[Configuración de peticiones HTTP_GET de la WEB]
+    J1 --> K[Configuración de pines y habilitación de interrupciones];
+    K -->L[Creación de una tarea en otro núcleo para la pantalla];
+    L -->M[Carga de la primera canción];
+    A2((Peticiones WEB)) --> J1
+
+    end
+    subgraph LOOP
+
+    M --> N["main loop()"];
+    N --> O["audio.loop()"]
+    B2((Interrupción por botón físico)) --> O
+    
+    end
+```
 ***
 
 ### **RESULTADO FINAL (PÁGINA WEB E IMPLEMENTACIÓN FÍSICA DEL REPRODUCTOR)**
