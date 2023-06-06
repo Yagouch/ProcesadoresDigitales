@@ -1,6 +1,13 @@
 # Proyecto - Reproductor MP3 y Radio
 ## Yago Carballo Barroso y Ramon Llobet Duch
 
+**Para ver el video recomendamos ir a la presentación en canva o al link de Youtube**
+
+Youtube:
+https://youtu.be/p_rmnvjsVH4
+
+Canva: https://www.canva.com/design/DAFkrZTKVUo/OY1Vx892KiAGcPGYppTrtw/edit?utm_content=DAFkrZTKVUo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 Nuestro proyecto se basa en un reproductor de audio MP3 y radio con varias funcionalidades.
 
 Podremos ***REPRODUCIR AUDIO*** desde una SD utilizando la biblioteca ```Audio.h``` para reproducir archivos de audio en la placa ESP32.
